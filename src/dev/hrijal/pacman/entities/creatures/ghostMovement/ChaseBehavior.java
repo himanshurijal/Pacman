@@ -1,10 +1,10 @@
-package dev.hrijal.pacman.entities.creatures.movement;
+package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
 import java.awt.Graphics;
 
 public interface ChaseBehavior 
 {
-	public void chase(float destX, float destY);
+	public void chase();
 	
 	public void render(Graphics g); //For testing, remove later
 }

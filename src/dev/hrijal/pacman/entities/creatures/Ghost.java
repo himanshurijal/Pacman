@@ -11,12 +11,14 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.Entity;
-import dev.hrijal.pacman.entities.creatures.movement.ChaseAmbush;
-import dev.hrijal.pacman.entities.creatures.movement.ChaseBehavior;
-import dev.hrijal.pacman.entities.creatures.movement.FrightenedBehavior;
-import dev.hrijal.pacman.entities.creatures.movement.FrightenedRunSlow;
-import dev.hrijal.pacman.entities.creatures.movement.ScatterBehavior;
-import dev.hrijal.pacman.entities.creatures.movement.ScatterTopRight;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ChaseAmbush;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ChaseBehavior;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.DeadBehavior;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.DeadRunHome;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.FrightenedBehavior;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.FrightenedRunMiddle;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ScatterBehavior;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ScatterTopRight;
 import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
@@ -37,6 +39,7 @@ public class Ghost extends Creature
 	private ChaseBehavior chaseBehavior;
 	private FrightenedBehavior frightenedBehavior;
 	private ScatterBehavior scatterBehavior;
+	private DeadBehavior deadBehavior;
 	
 	//Animation
 	private BufferedImage[] animMovement;
@@ -61,18 +64,19 @@ public class Ghost extends Creature
 		entityCollisionBounds.width = 14;
 		entityCollisionBounds.height = 14;
 		
-		chaseBehavior  = new ChaseAmbush(handler,this);
-		frightenedBehavior = new FrightenedRunSlow(this);
-		scatterBehavior = new ScatterTopRight(this);
+		this.timer = 0;
+		this.lastTime = 0;
 		
-		//Animation
+		chaseBehavior  = new ChaseAmbush(handler,this);
+		frightenedBehavior = new FrightenedRunMiddle(this);
+		scatterBehavior = new ScatterTopRight(this);
+		deadBehavior = new DeadRunHome(this);
+		
 		this.isFrightened = false;
 		this.isFlashing = false;
 		this.isDead = false;
 		
-		this.timer = 0;
-		this.lastTime = 0;
-		
+		//Animation
 		this.animMovement = movementAssets;
 		this.animFlashing = new Animation(Assets.ghostFlashing, 100);
 	}
@@ -102,7 +106,6 @@ public class Ghost extends Creature
 				timer += System.currentTimeMillis() - lastTime;
 				lastTime = System.currentTimeMillis();
 	
-				setSpeed(Creature.DEFAULT_SPEED / 2);
 				frightenedBehavior.runAway();
 				
 				if(timer >= DISABLED_DURATION)
@@ -133,7 +136,6 @@ public class Ghost extends Creature
 				timer += System.currentTimeMillis() - lastTime;
 				lastTime = System.currentTimeMillis();
 	
-				setSpeed(Creature.DEFAULT_SPEED / 2);
 				frightenedBehavior.runAway();
 				
 				if(timer >= FLASHING_DURATION)
@@ -147,8 +149,7 @@ public class Ghost extends Creature
 		
 		if(isDead)
 		{
-			setSpeed(Creature.DEFAULT_SPEED * 2);
-			frightenedBehavior.runAway();
+			deadBehavior.runToHome();
 			
 			if(x == Tile.TILEWIDTH * 11 && y == Tile.TILEHEIGHT * 9)
 			{
@@ -169,10 +170,7 @@ public class Ghost extends Creature
 				timer += System.currentTimeMillis() - lastTime;
 				lastTime = System.currentTimeMillis();
 				
-				setSpeed(Creature.DEFAULT_SPEED);
-				
-				chaseBehavior.chase(handler.getWorld().getEntityManager().getPlayer().getX(), 
-									handler.getWorld().getEntityManager().getPlayer().getY());
+				chaseBehavior.chase();
 				
 //				scatterBehavior.scatter();
 				
@@ -210,7 +208,7 @@ public class Ghost extends Creature
 		chaseBehavior.render(g);
 	}
 	
-	public void makeNextMove(float destX, float destY) //Simpler implementation of A* algorithm
+	public void makeNextMove(float destX, float destY, float tempSpeed) //Simpler implementation of A* algorithm
 	{
 		List<List<Float>> adjNodeValues = new ArrayList<>();
 		
@@ -218,7 +216,7 @@ public class Ghost extends Creature
 		float currGhostY = 0;
 		
 		currGhostX = x;			
-		currGhostY = y - speed; //Up
+		currGhostY = y - tempSpeed; //Up
 		
 		if(isXMoveValid(currGhostX - x) && isYMoveValid(currGhostY - y))
 		{
@@ -226,7 +224,7 @@ public class Ghost extends Creature
 																	1.0f + getHValue(currGhostX, currGhostY, destX, destY)));
 		}
 		
-		currGhostX = x - speed; //Left
+		currGhostX = x - tempSpeed; //Left
 		currGhostY = y;
 		
 		if(isXMoveValid(currGhostX - x) && isYMoveValid(currGhostY - y))
@@ -237,7 +235,7 @@ public class Ghost extends Creature
 		
 		
 		currGhostX = x;
-		currGhostY = y + speed; //Down
+		currGhostY = y + tempSpeed; //Down
 		
 		if(isXMoveValid(currGhostX - x) && isYMoveValid(currGhostY - y))
 		{
@@ -245,7 +243,7 @@ public class Ghost extends Creature
 																	1.0f + getHValue(currGhostX, currGhostY, destX, destY)));
 		}
 		
-		currGhostX = x + speed; //Right
+		currGhostX = x + tempSpeed; //Right
 		currGhostY = y;
 		
 		if(isXMoveValid(currGhostX - x) && isYMoveValid(currGhostY - y))

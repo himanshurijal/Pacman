@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.movement;
+package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,26 +11,26 @@ import dev.hrijal.pacman.tiles.Tile;
 public class ChaseAmbush implements ChaseBehavior
 {
 
-	private Ghost ghost;
 	private Handler handler;
-	
-	private float destX = 0 , destY = 0;
+	private Ghost ghost;
+	private float tempSpeed;
+	private float destX,destY;
 	
 	public ChaseAmbush(Handler handler, Ghost ghost)
 	{
 		this.handler = handler;
 		this.ghost = ghost;
+		tempSpeed = ghost.getSpeed();
+		destX = 0;
+		destY = 0;
 	}
 	
-	public void chase(float destX, float destY)
+	public void chase()
 	{
-		destX = getAmbushDestX(destX);
-		destY = getAmbushDestY(destY);
+		destX = getAmbushDestX(handler.getWorld().getEntityManager().getPlayer().getX());
+		destY = getAmbushDestY(handler.getWorld().getEntityManager().getPlayer().getY());
 		
-		this.destX = destX;
-		this.destY = destY;
-		
-		ghost.makeNextMove(destX, destY);
+		ghost.makeNextMove(destX, destY, tempSpeed);
 	}
 	
 	public void render(Graphics g)

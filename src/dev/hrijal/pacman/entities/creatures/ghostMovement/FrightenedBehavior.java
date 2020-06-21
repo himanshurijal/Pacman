@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.movement;
+package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
 public interface FrightenedBehavior
 {
