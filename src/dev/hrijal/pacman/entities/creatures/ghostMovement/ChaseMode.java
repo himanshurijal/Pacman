@@ -2,7 +2,7 @@ package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
 import java.awt.Graphics;
 
-public interface ChaseBehavior 
+public interface ChaseMode 
 {
 	public void chase();
 	

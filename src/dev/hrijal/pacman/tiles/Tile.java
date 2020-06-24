@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+
 public class Tile 
 {
 	
@@ -37,8 +39,8 @@ public class Tile
 	public void render(Graphics g, int x, int y)
 	{
 		g.drawImage(texture, x, y, Tile.TILEWIDTH, Tile.TILEHEIGHT, null);
-		g.setColor(Color.white);
-		g.drawRect(x, y, Tile.TILEWIDTH, Tile.TILEHEIGHT);
+//		g.setColor(Color.white);
+//		g.drawRect(x, y, Tile.TILEWIDTH, Tile.TILEHEIGHT);
 	}
 	
 	
@@ -47,6 +49,10 @@ public class Tile
 		return false;
 	}
 	
+	public boolean isSolid(Ghost ghost)
+	{
+		return false;
+	}
 	
 	//GETTERS AND SETTERS
 	
@@ -54,6 +60,5 @@ public class Tile
 	{
 		return id;
 	}
-
 	
 }

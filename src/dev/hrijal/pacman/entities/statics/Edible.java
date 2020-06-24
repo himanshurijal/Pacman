@@ -10,9 +10,11 @@ import dev.hrijal.pacman.gfx.Assets;
 public class Edible extends StaticEntity
 {
 	
+	public static final int EDIBLE_POINTS = 10;
+	
 	public Edible(Handler handler, float x, float y)
 	{
-		super(handler, x, y, 10);
+		super(handler, x, y, EDIBLE_POINTS);
 		
 		entityCollisionBounds.x = Entity.ENTITY_WIDTH / 2 - 5;;
 		entityCollisionBounds.y = Entity.ENTITY_HEIGHT / 2 - 5;
@@ -30,9 +32,9 @@ public class Edible extends StaticEntity
 	public void render(Graphics g) 
 	{
 		g.drawImage(Assets.edible, (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
-		g.setColor(Color.white);
-		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
-							 entityCollisionBounds.width, entityCollisionBounds.height);
+//		g.setColor(Color.white);
+//		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
+//							 entityCollisionBounds.width, entityCollisionBounds.height);
 	}
 	
 }

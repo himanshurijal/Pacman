@@ -14,18 +14,15 @@ public abstract class Entity
 	protected float x, y;
 	public static final int ENTITY_HEIGHT = Tile.TILEHEIGHT,
 						    ENTITY_WIDTH = Tile.TILEWIDTH;
-	protected int points;
 	
 	protected Rectangle entityCollisionBounds;
 		
-	public Entity(Handler handler, float x, float y, int points)
+	public Entity(Handler handler, float x, float y)
 	{
 		this.handler = handler;
 		
 		this.x = x;
 		this.y = y;
-		
-		this.points = points;
 		
 		this.entityCollisionBounds = new Rectangle(0, 0, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT);
 	}
@@ -57,12 +54,7 @@ public abstract class Entity
 		this.y = y;
 	}
 	
-	public int getPoints()
-	{
-		return points;
-	}
-	
-	public Rectangle getCollisionBounds(float xOffset, float yOffset)
+	public Rectangle getEntityCollisionBounds(float xOffset, float yOffset)
 	{
 		return new Rectangle((int) (x + entityCollisionBounds.x + xOffset), (int) (y + entityCollisionBounds.y + yOffset),
 												   (int) entityCollisionBounds.width, (int) entityCollisionBounds.height);			

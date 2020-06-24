@@ -37,6 +37,7 @@ public class Game implements Runnable
 	
 	Game(String title, int width,int height)
 	{
+		//No significant additions
 		this.isRunning = false;
 		
 		this.title = title;

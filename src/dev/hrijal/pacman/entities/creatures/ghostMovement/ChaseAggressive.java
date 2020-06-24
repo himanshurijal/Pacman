@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.entities.creatures.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 
-public class ChaseAggressive implements ChaseBehavior
+public class ChaseAggressive implements ChaseMode
 {
 	
 	private Handler handler;
@@ -22,8 +22,8 @@ public class ChaseAggressive implements ChaseBehavior
 	
 	public void chase()
 	{
-		ghost.makeNextMove(handler.getWorld().getEntityManager().getPlayer().getX(), 
-						   handler.getWorld().getEntityManager().getPlayer().getY(), 
+		ghost.makeNextMove(handler.getWorld().getPlayer().getX(), 
+						   handler.getWorld().getPlayer().getY(), 
 						   tempSpeed);
 	}
 	

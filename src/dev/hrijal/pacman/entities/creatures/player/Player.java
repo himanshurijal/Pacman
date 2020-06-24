@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures;
+package dev.hrijal.pacman.entities.creatures.player;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,30 +6,27 @@ import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.Entity;
+import dev.hrijal.pacman.entities.creatures.Creature;
 import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.input.KeyManager;
-import dev.hrijal.pacman.tiles.Tile;
 
 public class Player extends Creature
 {	
 	
 	private boolean isDead;
 	
-	//Animation
+	//ANIMATION
 	private Animation animUp;
 	private Animation animDown;
 	private Animation animLeft;
 	private Animation animRight;
 	private Animation animDead;
 	
-	private int score;
-	
 	public Player(Handler handler, float x, float y, int points) 
 	{
 		super(handler, x, y, points);
-		
-		score = 0;
+
 		isDead = false;
 		
 		//Movement		
@@ -61,24 +58,8 @@ public class Player extends Creature
 			animRight.tick();
 			
 			getInput();
-			
-			int entityIndex = 0;
-			
 			moveX(); 
-			entityIndex = getEntityCollisionIndex(xMove, 0f);
-			if(entityIndex != -1)
-			{
-				score += handler.getWorld().getEntityManager().getEntities().get(entityIndex).getPoints();
-				handler.getWorld().getEntityManager().removeEntity(entityIndex);
-			}
-
 			moveY();
-			entityIndex = getEntityCollisionIndex(0f, yMove);
-			if(entityIndex != -1)
-			{
-				score += handler.getWorld().getEntityManager().getEntities().get(entityIndex).getPoints();
-				handler.getWorld().getEntityManager().removeEntity(entityIndex);
-			}
 		}
 		else
 		{
@@ -87,10 +68,7 @@ public class Player extends Creature
 	}
 	
 	public void render(Graphics g)
-	{
-		g.setColor(Color.white);
-		g.drawString("Current Score: " + score, Tile.TILEWIDTH / 2, Tile.TILEHEIGHT / 2 + 5);
-		
+	{		
 		g.drawImage(getCurrentAnimationFrame(), (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
 		
 		g.setColor(Color.white);
@@ -125,17 +103,17 @@ public class Player extends Creature
 		}
 	}
 	
-	public int getEntityCollisionIndex(float xOffset, float yOffset)
+	public int getStaticEntityCollisionIndex(float xOffset, float yOffset)
 	{
 		int index = -1, i = 0;
 		
-		for(Entity e: handler.getWorld().getEntityManager().getEntities())
+		for(Entity e: handler.getWorld().getStaticEntityManager().getEntities())
 		{
 			if(e.equals(this))
 			{
 				continue;
 			}
-			if(e.getCollisionBounds(0f, 0f).intersects(getCollisionBounds(xOffset, yOffset)))
+			if(e.getEntityCollisionBounds(0f, 0f).intersects(getEntityCollisionBounds(xOffset, yOffset)))
 			{
 				index = i;
 			}

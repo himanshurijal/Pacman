@@ -1,14 +1,14 @@
 package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
-import dev.hrijal.pacman.entities.creatures.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class DeadRunHome implements DeadBehavior
+public class DeadRunHome implements DeadMode
 {
 	private Ghost ghost;
 	private float tempSpeed;
 	public static final float DEST_X = Tile.TILEWIDTH * 11,
-			   				  DEST_Y = Tile.TILEHEIGHT * 9;
+			   				  DEST_Y = Tile.TILEHEIGHT * 11;
 
 	public DeadRunHome(Ghost ghost)
 	{

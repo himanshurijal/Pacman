@@ -18,7 +18,7 @@ public abstract class Creature extends Entity
 	
 	public Creature(Handler handler, float x, float y, int points)
 	{
-		super(handler, x, y, points);
+		super(handler, x, y);
 		
 		this.speed  = DEFAULT_SPEED;
 		this.xMove = 0;

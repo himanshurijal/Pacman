@@ -1,5 +1,6 @@
 package dev.hrijal.pacman.tiles;
 
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Assets;
 
 public class MazeTile extends Tile 
@@ -15,5 +16,10 @@ public class MazeTile extends Tile
 	{
 		return true;
 	}
-	
+		
+	@Override
+	public boolean isSolid(Ghost ghost)
+	{
+		return true;
+	}
 }

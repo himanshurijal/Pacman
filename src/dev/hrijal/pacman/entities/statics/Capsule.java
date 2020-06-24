@@ -11,11 +11,12 @@ import dev.hrijal.pacman.gfx.Assets;
 public class Capsule extends StaticEntity
 {
 	
+	public static final int CAPSULE_POINTS = 50;
 	private Animation anim;
 	
 	public Capsule(Handler handler, float x, float y)
 	{
-		super(handler, x, y, 50);
+		super(handler, x, y, CAPSULE_POINTS);
 		
 		anim = new Animation(Assets.capsule, 200);
 	

@@ -3,15 +3,14 @@ package dev.hrijal.pacman.entities.creatures.ghostMovement;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ScatterTopLeft implements ScatterMode
+public class ScatterBottomRight implements ScatterMode
 {
-	
 	private Ghost ghost;
 	private float tempSpeed;
-	public static final float DEST_X = Tile.TILEWIDTH + 7,
-							  DEST_Y = Tile.TILEHEIGHT * 2 + 7;
+	public static final float DEST_X = Tile.TILEWIDTH * 22 - Tile.TILEWIDTH,
+							  DEST_Y = Tile.TILEHEIGHT * 16;
 
-	public ScatterTopLeft(Ghost ghost)
+	public ScatterBottomRight(Ghost ghost)
 	{
 		this.ghost = ghost;
 		tempSpeed = ghost.getSpeed();
@@ -19,7 +18,6 @@ public class ScatterTopLeft implements ScatterMode
 	
 	public void scatter()
 	{
-		ghost.makeNextMove(ScatterTopLeft.DEST_X, ScatterTopLeft.DEST_Y, tempSpeed);
+		ghost.makeNextMove(ScatterBottomRight.DEST_X, ScatterBottomRight.DEST_Y, tempSpeed);
 	}
-	
 }

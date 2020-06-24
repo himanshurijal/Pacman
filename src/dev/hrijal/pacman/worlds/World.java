@@ -1,34 +1,59 @@
 package dev.hrijal.pacman.worlds;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.entities.EntityManager;
-import dev.hrijal.pacman.entities.creatures.Ghost;
-import dev.hrijal.pacman.entities.creatures.Player;
+import dev.hrijal.pacman.ScoreManager;
+import dev.hrijal.pacman.entities.EntityCollisionManager;
+import dev.hrijal.pacman.entities.creatures.ghosts.GhostManager;
+import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.Edible;
-import dev.hrijal.pacman.gfx.Assets;
+import dev.hrijal.pacman.entities.statics.StaticEntity;
+import dev.hrijal.pacman.entities.statics.StaticEntityManager;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.utils.FileParserUtil;
 
 public class World 
 {
-
+	
+	//ENVIRONMENT
 	private int[][] tiles;
-	private int width, height, spawnX, spawnY;
-	private EntityManager entityManager;
+	private int width, height;
+	
+	//ENTITY COLLISION MANAGER
+	private EntityCollisionManager entityCollisionManager;
+	
+	//STATIC ENTITIES
+	private StaticEntityManager staticEntityManager;
+	
+	//PLAYER
+	private Player player;
+	private int spawnX, spawnY;
+	
+	//GHOSTS
+	private GhostManager ghostManager;
+	
+	//SCOREBOARD
+	private ScoreManager scoreManager;
+
 	
 	public World(String path, Handler handler)
-	{
-		this.entityManager = new EntityManager(handler, new Player(handler, 0, 0, 0),
-							 new Ghost(handler, Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 9, Assets.ghostOrange));
+	{	
+		//Environment
+		loadWorld(path);
 		
-		loadWorld(path); //We set the actual player spawn coordinates here
+		//Entity Collision Manager
+		entityCollisionManager = new EntityCollisionManager(handler);
 		
+		//Static entities		
+		List <StaticEntity> staticEntities = new ArrayList<>();
+
 		float currTileX = 0;
-		float currTileY = 0;
-		
+		float currTileY = 0;  
+
 		for(int[] tileRow: tiles)
 		{
 			currTileX = 0;
@@ -37,16 +62,27 @@ public class World
 			{
 				if(tile == 1) //Tile with id 1 is reserved for edibles
 				{
-					entityManager.addEntity(new Edible(handler, currTileX, currTileY));
+					staticEntities.add(new Edible(handler, currTileX, currTileY));
 				}
 				else if( tile == 2) //Tile with id 2 is reserved for capsules
 				{
-					entityManager.addEntity(new Capsule(handler, currTileX, currTileY));
+					staticEntities.add(new Capsule(handler, currTileX, currTileY));
 				}
 				currTileX += Tile.TILEWIDTH;
 			}
 			currTileY += Tile.TILEHEIGHT;
 		}
+		
+		staticEntityManager = new StaticEntityManager(handler, staticEntities, entityCollisionManager);
+		
+		//Player
+		player = new Player(handler, spawnX, spawnY, 0);
+		
+		//Ghosts
+		ghostManager  = new GhostManager(handler, entityCollisionManager);
+		
+		//ScoreBoard
+		scoreManager = new ScoreManager(entityCollisionManager);
 	}
 
 	public void loadWorld(String path)
@@ -61,9 +97,6 @@ public class World
 		spawnY = FileParserUtil.parseInt(tokens[3]);
 		
 		tiles = new int[height][width];
-		
-		entityManager.getPlayer().setX(spawnX);
-		entityManager.getPlayer().setY(spawnY);
 	
 		for(int i = 0; i < height; i++)
 		{
@@ -76,7 +109,15 @@ public class World
 	
 	public void tick()
 	{
-		entityManager.tick();
+		staticEntityManager.tick();
+		
+		player.tick();
+		
+		ghostManager.tick();
+		
+		entityCollisionManager.checkCollisionAndNotify();
+		
+		scoreManager.tick();
 	}
 	
 	public void render(Graphics g)
@@ -88,7 +129,14 @@ public class World
 				getTile(x,y).render(g, y * Tile.TILEWIDTH, x * Tile.TILEHEIGHT);
 			}
 		}
-		entityManager.render(g);
+		
+		staticEntityManager.render(g);
+		
+		player.render(g);
+		
+		ghostManager.render(g);
+		
+		scoreManager.render(g);
 	}
 	
 	public Tile getTile(int x, int y)
@@ -135,9 +183,20 @@ public class World
 	{
 		return height;
 	}
-	
-	public EntityManager getEntityManager() 
+
+	public StaticEntityManager getStaticEntityManager() 
 	{
-		return entityManager;
+		return staticEntityManager;
 	}
+	
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
+	public GhostManager getGhostManager() 
+	{
+		return ghostManager;
+	}
+	
 }
