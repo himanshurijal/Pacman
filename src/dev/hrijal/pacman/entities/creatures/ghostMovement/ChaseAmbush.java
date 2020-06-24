@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.entities.creatures.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.input.KeyManager;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ChaseAmbush implements ChaseBehavior
+public class ChaseAmbush implements ChaseMode
 {
 
 	private Handler handler;
@@ -27,8 +27,8 @@ public class ChaseAmbush implements ChaseBehavior
 	
 	public void chase()
 	{
-		destX = getAmbushDestX(handler.getWorld().getEntityManager().getPlayer().getX());
-		destY = getAmbushDestY(handler.getWorld().getEntityManager().getPlayer().getY());
+		destX = getAmbushDestX(handler.getWorld().getPlayer().getX());
+		destY = getAmbushDestY(handler.getWorld().getPlayer().getY());
 		
 		ghost.makeNextMove(destX, destY, tempSpeed);
 	}

@@ -1,6 +1,6 @@
 package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
-public interface FrightenedBehavior
+public interface DeadMode 
 {
-	public void runAway();
+	public void runToHome();
 }

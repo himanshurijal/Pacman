@@ -11,7 +11,7 @@ public class Assets //Game environment
 	public static BufferedImage maze, gate, empty, edible, pacman;
 	
 	public static BufferedImage[] playerLeft, playerRight, playerDown, playerUp, playerDead,
-								  ghostOrange, ghostGreen, ghostPurple, ghostFlashing,
+								  ghostRed, ghostOrange, ghostGreen, ghostPurple, ghostFlashing,
 								  ghostEyes, capsule;
 	
 	
@@ -37,9 +37,15 @@ public class Assets //Game environment
 	
 		//GHOST ASSETS (Ghost assets for any ghost must be loaded in this order unless Spritesheet is changed)
 		
+		ghostRed = new BufferedImage[4];
 		ghostOrange = new BufferedImage[4];
 		ghostGreen = new BufferedImage[4];
 		ghostPurple = new BufferedImage[4];
+		
+		ghostRed[0] = creatureSheet.crop(width * 0, height * 0, width, height); //right
+		ghostRed[1] = creatureSheet.crop(width * 0, height * 2, width, height); //down
+		ghostRed[2] = creatureSheet.crop(width * 0, height * 4, width, height); //left
+		ghostRed[3] = creatureSheet.crop(width * 0, height * 6, width, height); //up
 		
 		ghostOrange[0] = creatureSheet.crop(width * 3, height * 0, width, height); //right
 		ghostOrange[1] = creatureSheet.crop(width * 3, height * 2, width, height); //down

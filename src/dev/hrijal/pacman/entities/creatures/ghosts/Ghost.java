@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures;
+package dev.hrijal.pacman.entities.creatures.ghosts;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,37 +11,42 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.Entity;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.ChaseAmbush;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.ChaseBehavior;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.DeadBehavior;
+import dev.hrijal.pacman.entities.creatures.Creature;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ChaseMode;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.DeadMode;
 import dev.hrijal.pacman.entities.creatures.ghostMovement.DeadRunHome;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.FrightenedBehavior;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.FrightenedRunMiddle;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.ScatterBehavior;
-import dev.hrijal.pacman.entities.creatures.ghostMovement.ScatterTopRight;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.FrightenedMode;
+import dev.hrijal.pacman.entities.creatures.ghostMovement.ScatterMode;
 import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
 public class Ghost extends Creature
 {
-	//Movement
+	//MOVEMENT
 	float[] lastAdjNode;
-	
+
+	private boolean isAtHome;
+	private boolean isScattered;
+	private boolean isChasing;
 	private boolean isFrightened;
 	private boolean isFlashing;
 	private boolean isDead;
 	
-	private long timer, lastTime;
-	private static final long DISABLED_DURATION = 7000,  //Calculated in milliseconds
-					   		  FLASHING_DURATION = 1000;
+	private long timer, lastTime, secondaryTimer, secondaryLastTime;
+	private long atHomeDuration; 
+	public static final long  SCATTERED_DURATION = 7000, //Calculated in milliseconds
+							  FRIGHTENED_DURATION = 8000,  
+					   		  FLASHING_DURATION = 2000;
 	
-	private ChaseBehavior chaseBehavior;
-	private FrightenedBehavior frightenedBehavior;
-	private ScatterBehavior scatterBehavior;
-	private DeadBehavior deadBehavior;
+
+			
+	private ScatterMode scatterBehavior;
+	private ChaseMode chaseBehavior;
+	private FrightenedMode frightenedBehavior;
+	private DeadMode deadBehavior;
 	
-	//Animation
+	//ANIMATION
 	private BufferedImage[] animMovement;
 	private Animation animFlashing;
 	
@@ -64,122 +69,110 @@ public class Ghost extends Creature
 		entityCollisionBounds.width = 14;
 		entityCollisionBounds.height = 14;
 		
-		this.timer = 0;
-		this.lastTime = 0;
+		timer = 0;
+		lastTime = 0;
+		secondaryTimer = 0;
+		secondaryLastTime = 0;
 		
-		chaseBehavior  = new ChaseAmbush(handler,this);
-		frightenedBehavior = new FrightenedRunMiddle(this);
-		scatterBehavior = new ScatterTopRight(this);
-		deadBehavior = new DeadRunHome(this);
-		
-		this.isFrightened = false;
-		this.isFlashing = false;
-		this.isDead = false;
+		isAtHome = false;
+		isScattered = false;
+		isChasing = false;
+		isFrightened = false;
+		isFlashing = false;
+		isDead = false;
 		
 		//Animation
-		this.animMovement = movementAssets;
-		this.animFlashing = new Animation(Assets.ghostFlashing, 100);
+		animMovement = movementAssets;
+		animFlashing = new Animation(Assets.ghostFlashing, 100);
 	}
 
 	@Override
 	public void tick() 
-	{
+	{		
+		if(isAtHome)
+		{	
+			incrementTimer();
+			
+			makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, speed);
+			
+			if(timer >= atHomeDuration)
+			{
+				setAtHome(false);
+				setScattered(true);
+				resetTimer();
+			}
+		}
+		
+		if(secondaryTimer != 0)
+		{		
+			incrementSecondaryTimer();
+			
+			if(secondaryTimer >= atHomeDuration + SCATTERED_DURATION)
+			{
+				resetSecondaryTimer();
+			}
+		}
+		
+		if(isScattered)
+		{
+			incrementTimer();
+
+			scatterBehavior.scatter();
+			
+			if(timer >= SCATTERED_DURATION)
+			{
+				setScattered(false);
+				setChasing(true);
+				resetTimer();
+			}
+		}
+		
+		if(isChasing)
+		{
+			chaseBehavior.chase();
+		}
+		
 		if(isFrightened)
 		{
-			if(collisionWithPlayer())
+			incrementTimer();
+
+			frightenedBehavior.runAway();
+			
+			if(timer >= FRIGHTENED_DURATION)
 			{
-				setDead(true);
 				setFrightened(false);
-				
-				x = Math.round(x / Tile.TILEWIDTH) * Tile.TILEWIDTH;
-				y = Math.round(y / Tile.TILEHEIGHT) * Tile.TILEHEIGHT;
-				
-				System.out.println(x + "," + y);
-				
-				timer = 0;
-			}
-			else
-			{
-				if(lastTime == 0)
-					lastTime = System.currentTimeMillis();
-				
-				timer += System.currentTimeMillis() - lastTime;
-				lastTime = System.currentTimeMillis();
-	
-				frightenedBehavior.runAway();
-				
-				if(timer >= DISABLED_DURATION)
-				{
-					setFrightened(false);
-					setFlashing(true);
-					timer = 0;
-				}
+				setFlashing(true);
+				resetTimer();
 			}
 		}
 		
 		if(isFlashing)
 		{
-			if(collisionWithPlayer())
+			animFlashing.tick();
+			
+			incrementTimer();
+
+			frightenedBehavior.runAway();
+			
+			if(timer >= FLASHING_DURATION)
 			{
-				setDead(true);
 				setFlashing(false);
-				
-				x = Math.round(x / Tile.TILEWIDTH) * Tile.TILEWIDTH;
-				y = Math.round(y / Tile.TILEHEIGHT) * Tile.TILEHEIGHT;
-				
-				timer = 0;
-			}
-			else
-			{
-				animFlashing.tick();
-				
-				timer += System.currentTimeMillis() - lastTime;
-				lastTime = System.currentTimeMillis();
-	
-				frightenedBehavior.runAway();
-				
-				if(timer >= FLASHING_DURATION)
-				{
-					setFlashing(false);
-					timer = 0;
-					lastTime = 0;
-				}
+				setChasing(true);
+				resetTimer();
 			}
 		}
 		
 		if(isDead)
-		{
+		{	
+			incrementTimer();
+			
 			deadBehavior.runToHome();
 			
-			if(x == Tile.TILEWIDTH * 11 && y == Tile.TILEHEIGHT * 9)
+			if(x == DeadRunHome.DEST_X && y == DeadRunHome.DEST_Y)
 			{
 				setDead(false);
-				timer = 0;
-				lastTime = 0;
-			}
-		}
-		
-		if(!isFrightened && !isFlashing && !isDead)
-		{
-			if(collisionWithPlayer())
-			{
-				handler.getWorld().getEntityManager().getPlayer().setDead(true);
-			}
-			else
-			{
-				timer += System.currentTimeMillis() - lastTime;
-				lastTime = System.currentTimeMillis();
-				
-				chaseBehavior.chase();
-				
-//				scatterBehavior.scatter();
-				
-				if(timer >= FLASHING_DURATION)
-				{
-					setFlashing(false);
-					timer = 0;
-					lastTime = 0;
-				}
+				setScattered(true);
+				resetTimer();
 			}
 		}	
 	}
@@ -200,12 +193,54 @@ public class Ghost extends Creature
 			g.drawImage(getCurrentImageFrame(), (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
 		}
 		
-		g.setColor(Color.white);
-		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
-				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
-		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
-													 entityCollisionBounds.width, entityCollisionBounds.height);
-		chaseBehavior.render(g);
+//		g.setColor(Color.white);
+//		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
+//				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
+//		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
+//													 entityCollisionBounds.width, entityCollisionBounds.height);
+//		chaseBehavior.render(g);
+	}
+	
+	public void setAllStatesToFalse()
+	{
+		isAtHome = false;
+		isScattered = false;
+		isChasing = false;
+		isFrightened = false;
+		isFlashing = false;
+		isDead = false;
+	}
+	
+	public void incrementTimer()
+	{
+		if(lastTime == 0)
+			lastTime = System.currentTimeMillis();
+		
+		timer += System.currentTimeMillis() - lastTime;
+		lastTime = System.currentTimeMillis();
+	}
+	
+	public void resetTimer()
+	{
+		timer = 0;
+		lastTime = 0;
+	}
+	
+	public void incrementSecondaryTimer()
+	{
+		if(secondaryLastTime == 0)
+		{
+			secondaryLastTime = System.currentTimeMillis();
+		}
+		
+		secondaryTimer += System.currentTimeMillis() - secondaryLastTime;
+		secondaryLastTime = System.currentTimeMillis();
+	}
+	
+	public void resetSecondaryTimer()
+	{
+		secondaryTimer = 0;
+		secondaryLastTime = 0;
 	}
 	
 	public void makeNextMove(float destX, float destY, float tempSpeed) //Simpler implementation of A* algorithm
@@ -349,6 +384,12 @@ public class Ghost extends Creature
 		return check;
 	}
 	
+	@Override
+	public boolean isCollisionWithTile(int x, int y)
+	{
+		return handler.getWorld().getTile(y, x).isSolid(this);
+	}
+
 	public float getHValue(float currGhostX, float currGhostY, float destX, float destY)
 	{
 		return (float) Math.sqrt(Math.pow(currGhostX - destX, 2) + Math.pow(currGhostY - destY, 2));
@@ -358,7 +399,7 @@ public class Ghost extends Creature
 	{
 		boolean check = false;
 		
-		if(handler.getWorld().getEntityManager().getPlayer().getCollisionBounds(0f, 0f).intersects(getCollisionBounds(0f,0f)))
+		if(handler.getWorld().getPlayer().getEntityCollisionBounds(0f, 0f).intersects(getEntityCollisionBounds(0f,0f)))
 		{
 			check = true;
 		}
@@ -432,19 +473,43 @@ public class Ghost extends Creature
 	
 	//GETTERS AND SETTERS
 	
-	public boolean isDisabled() 
+	public boolean isAtHome() 
+	{
+		return isAtHome;
+	}
+
+	public void setAtHome(boolean isAtHome)
+	{
+		this.isAtHome = isAtHome;
+	}
+	
+	public boolean isScattered() 
+	{
+		return isScattered;
+	}
+
+	public void setScattered(boolean isScattered)
+	{
+		this.isScattered = isScattered;
+	}
+	
+	public boolean isChasing() 
+	{
+		return isChasing;
+	}
+
+	public void setChasing(boolean isChasing)
+	{
+		this.isChasing = isChasing;
+	}
+	
+	public boolean isFrightened() 
 	{
 		return isFrightened;
 	}
 
 	public void setFrightened(boolean isFrightened) 
 	{
-		if((this.isFrightened && timer < DISABLED_DURATION) || isFlashing)
-		{
-			isFlashing = false;
-			timer = 0;
-			lastTime = 0;
-		}
 		this.isFrightened = isFrightened;
 	}
 	
@@ -467,5 +532,55 @@ public class Ghost extends Creature
 	{
 		this.isDead = isDead;
 	}
+
+	public long getTimer()
+	{
+		return timer;
+	}
 	
+	public long getSecondaryTimer()
+	{
+		return secondaryTimer;
+	}
+	
+	public void setSecondaryTimer(long secondaryTimer)
+	{
+		this.secondaryTimer = secondaryTimer;
+	}
+	
+	public void setSecondaryLastTime(long secondaryLastTime)
+	{
+		this.secondaryLastTime = secondaryLastTime;
+	}
+	
+	public long getAtHomeDuration()
+	{
+		return atHomeDuration;
+	}
+	public void setAtHomeDuration(long atHomeDuration)
+	{
+		this.atHomeDuration = atHomeDuration;
+	}
+	
+	//MOVEMENT BEHAVIOR
+	public void setScatterBehavior(ScatterMode scatterBehavior) 
+	{
+		this.scatterBehavior = scatterBehavior;
+	}
+	
+	public void setChaseBehavior(ChaseMode chaseBehavior)
+	{
+		this.chaseBehavior = chaseBehavior;
+	}
+
+	public void setFrightenedBehavior(FrightenedMode frightenedBehavior) 
+	{
+		this.frightenedBehavior = frightenedBehavior;
+	}
+
+	public void setDeadBehavior(DeadMode deadBehavior)
+	{
+		this.deadBehavior = deadBehavior;
+	}
+
 }

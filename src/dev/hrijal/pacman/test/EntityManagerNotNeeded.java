@@ -1,37 +1,45 @@
-package dev.hrijal.pacman.entities;
+package dev.hrijal.pacman.test;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.List;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.entities.creatures.Ghost;
-import dev.hrijal.pacman.entities.creatures.Player;
+import dev.hrijal.pacman.entities.Entity;
+import dev.hrijal.pacman.entities.Observer;
+import dev.hrijal.pacman.entities.Subject;
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.Capsule;
 
-public class EntityManager 
+public class EntityManagerNotNeeded implements Subject
 {
 
 	private Handler handler;
 	
-	private ArrayList<Entity> entities;
+	private List<Entity> entities;
 	
 	private Player player;
 	
 	private Ghost ghostOrange;
 //	private Ghost ghostGreen;
 //	private Ghost ghostPurple;
+	
+	private List<Observer> observers;
 
-	public EntityManager(Handler handler, Player player, Ghost ghostOrange)
+	public EntityManagerNotNeeded(Handler handler, Player player, Ghost ghostOrange)
 	{
 		this.handler = handler;
 		
-		this.entities = new ArrayList<Entity>();
+		this.entities = new ArrayList<>();
 		
 		this.player = player;
 		
 		this.ghostOrange = ghostOrange;
 		//this.ghostGreen = ghostGreen;
 		//this.ghostPurple = ghostPurple;
+		
+		this.observers = new ArrayList<>();
 	}
 	
 	public void tick()
@@ -42,6 +50,10 @@ public class EntityManager
 		}
 		player.tick();
 		ghostOrange.tick();
+		
+		//Check for player collisions
+		
+		player.getStaticEntityCollisionIndex(0f, 0f);
 	}
 	
 	public void render(Graphics g)
@@ -64,6 +76,32 @@ public class EntityManager
 	}
 	
 	
+	//OBSERVER INTERFACE 
+	
+	public void registerObserver(Observer o)
+	{
+		observers.add(o);
+	}
+	
+	public void removeObserver(Observer o)
+	{
+		int index = observers.indexOf(o);
+		
+		if(index >= 0)
+		{
+			observers.remove(o);
+		}
+	}
+	
+	public void notifyObservers()
+	{
+		for(Observer o: observers)
+		{
+//			o.update();
+		}
+	}
+	
+	
 	//GETTERS AND SETTERS 
 	
 	public Player getPlayer() 
@@ -76,7 +114,7 @@ public class EntityManager
 		this.player = player;
 	}
 
-	public ArrayList<Entity> getEntities() 
+	public List<Entity> getEntities() 
 	{
 		return entities;
 	}

@@ -1,6 +1,6 @@
 package dev.hrijal.pacman.entities.creatures.ghostMovement;
 
-public interface ScatterBehavior 
+public interface ScatterMode 
 {
 	public void scatter();
 }
