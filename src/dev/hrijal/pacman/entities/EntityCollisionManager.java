@@ -7,11 +7,11 @@ import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
-public class EntityCollisionManager implements Subject
+public class EntityCollisionManager implements Subject  //TODO: Try to implement Facade Pattern and the principle of least knowledge
 {
 	
 	private Handler handler;
-	private List<Observer> observers; //Observers classes: ScoreManager, GhostManager, StaticEntityManager
+	private List<Observer> observers; //Observer classes: ScoreManager, GhostManager, StaticEntityManager
 	private StaticEntity staticCollisionObject;
 	private List<Ghost> ghostCollisionObjects;
 	

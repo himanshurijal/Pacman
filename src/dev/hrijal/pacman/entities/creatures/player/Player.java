@@ -11,7 +11,7 @@ import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.input.KeyManager;
 
-public class Player extends Creature
+public class Player extends Creature //TODO: Try to implement Facade Pattern and the principle of least knowledge
 {	
 	
 	private boolean isDead;
@@ -70,12 +70,12 @@ public class Player extends Creature
 	public void render(Graphics g)
 	{		
 		g.drawImage(getCurrentAnimationFrame(), (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
-		
-		g.setColor(Color.white);
-		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
-				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
-		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
-													 entityCollisionBounds.width, entityCollisionBounds.height);
+//		
+//		g.setColor(Color.white);
+//		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
+//				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
+//		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
+//													 entityCollisionBounds.width, entityCollisionBounds.height);
 	}	
 	
 	public void getInput()

@@ -23,7 +23,7 @@ import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class GhostManager implements Observer 
+public class GhostManager implements Observer //TODO: Try to implement Facade Pattern and the principle of least knowledge
 {
 	
 	private Handler handler;

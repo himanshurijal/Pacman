@@ -9,16 +9,14 @@ import dev.hrijal.pacman.entities.Entity;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.entities.Observer;
 import dev.hrijal.pacman.entities.Subject;
-import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 
 public class StaticEntityManager implements Observer
 {
-	private Handler handler;
+	
 	private List<StaticEntity> staticEntities;
 
 	public StaticEntityManager(Handler handler, List<StaticEntity> staticEntities, EntityCollisionManager entityCollisionManager)
 	{
-		this.handler = handler;
 		this.staticEntities = new ArrayList<>(staticEntities);
 		entityCollisionManager.registerObserver(this);
 	}
@@ -52,6 +50,7 @@ public class StaticEntityManager implements Observer
 			staticEntities.remove(entityManager.getStaticCollisionObject());
 		}
 	}
+	
 	
 	//GETTERS AND SETTERS 
 
