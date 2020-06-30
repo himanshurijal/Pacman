@@ -1,9 +1,9 @@
-package dev.hrijal.pacman.entities.creatures.ghostMovement;
+package dev.hrijal.pacman.entities.creatures.ghosts.movement;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ScatterTopRight implements ScatterMode
+public class ScatterTopRight implements ScatterBehavior
 {
 	
 	private Ghost ghost;

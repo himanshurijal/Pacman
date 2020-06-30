@@ -53,7 +53,7 @@ public class EntityManagerNotNeeded implements Subject
 		
 		//Check for player collisions
 		
-		player.getStaticEntityCollisionIndex(0f, 0f);
+//		player.getStaticEntityCollisionIndex(0f, 0f);
 	}
 	
 	public void render(Graphics g)
@@ -70,7 +70,7 @@ public class EntityManagerNotNeeded implements Subject
 	{
 		if(entities.get(index).getClass() == Capsule.class)
 		{
-			ghostOrange.setFrightened(true);
+//			ghostOrange.setFrightened(true);
 		}			
 		entities.remove(index);
 	}

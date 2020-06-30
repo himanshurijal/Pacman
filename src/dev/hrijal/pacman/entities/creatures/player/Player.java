@@ -102,26 +102,6 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 			xMove = speed;
 		}
 	}
-	
-	public int getStaticEntityCollisionIndex(float xOffset, float yOffset)
-	{
-		int index = -1, i = 0;
-		
-		for(Entity e: handler.getWorld().getStaticEntityManager().getEntities())
-		{
-			if(e.equals(this))
-			{
-				continue;
-			}
-			if(e.getEntityCollisionBounds(0f, 0f).intersects(getEntityCollisionBounds(xOffset, yOffset)))
-			{
-				index = i;
-			}
-			i++;
-		}
-		
-		return index;
-	}
 
 	public BufferedImage getCurrentAnimationFrame()
 	{

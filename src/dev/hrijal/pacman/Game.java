@@ -13,6 +13,7 @@ import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable
 {
+	
 	private Thread thread;
 	private boolean isRunning;
 	
@@ -109,7 +110,7 @@ public class Game implements Runnable
 	{
 		init();
 		
-		int fps = 30; //How many times every second we want the frame or tick and render method to run
+		int fps = 40; //How many times every second we want the frame or tick and render method to run
 		double timePerTick = 1000000000 / fps; //Time period after which each(1) frame will be run
 											   //such that 60 frames will run in one second.
 											   //NanoSeconds is used here for precision
@@ -139,7 +140,7 @@ public class Game implements Runnable
 			
 			if(timer >= 1000000000)
 			{
-				System.out.println("Frames per second:"+fpsCounter);
+//				System.out.println("Frames per second:"+fpsCounter);
 				fpsCounter = 0;
 				timer = 0;
 			}

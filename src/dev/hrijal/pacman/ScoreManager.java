@@ -10,6 +10,9 @@ import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.entities.Observer;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.AtHomeState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ChasingState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
 import dev.hrijal.pacman.tiles.Tile;
 
 public class ScoreManager implements Observer
@@ -46,7 +49,8 @@ public class ScoreManager implements Observer
 			
 			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
 			{
-				if(!ghost.isAtHome() && !ghost.isScattered() && !ghost.isChasing())
+				if(!(ghost.getState() instanceof AtHomeState) && (ghost.getState() instanceof ScatteredState) 
+																&& !(ghost.getState() instanceof ChasingState))
 				{
 					currScore += ghostPoints.get(0);
 					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 

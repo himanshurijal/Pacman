@@ -1,9 +1,9 @@
-package dev.hrijal.pacman.entities.creatures.ghostMovement;
+package dev.hrijal.pacman.entities.creatures.ghosts.movement;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class FrightenedBottomRightMid implements FrightenedMode
+public class FrightenedBottomRightMid implements FrightenedBehavior
 {
 	
 	private Ghost ghost;

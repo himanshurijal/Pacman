@@ -1,6 +1,8 @@
 package dev.hrijal.pacman.tiles;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
 import dev.hrijal.pacman.gfx.Assets;
 
 public class GateTile extends Tile 
@@ -20,7 +22,8 @@ public class GateTile extends Tile
 	@Override
 	public boolean isSolid(Ghost ghost)
 	{
-		if(ghost.isScattered() || ghost.isDead() || ghost.getSecondaryTimer() >= ghost.getAtHomeDuration())
+		if(ghost.getState() instanceof ScatteredState || ghost.getState() instanceof DeadState 
+													|| ghost.getSecondaryTimer() >= ghost.getAtHomeDuration())
 		{
 			return false;
 		}

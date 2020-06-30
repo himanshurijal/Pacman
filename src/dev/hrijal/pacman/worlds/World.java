@@ -135,7 +135,7 @@ public class World
 		player.render(g);
 		
 		ghostManager.render(g);
-		
+	
 		scoreManager.render(g);
 	}
 	

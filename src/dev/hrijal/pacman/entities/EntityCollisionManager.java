@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
 public class EntityCollisionManager implements Subject  //TODO: Try to implement Facade Pattern and the principle of least knowledge
@@ -48,7 +49,9 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 	
 	public void checkCollisionAndNotify()
 	{
-		int collisionIndex = handler.getWorld().getPlayer().getStaticEntityCollisionIndex(0f, 0f);
+		Player player = handler.getWorld().getPlayer();
+		
+		int collisionIndex = getStaticEntityCollisionIndex(player, 0f, 0f);
 		
 		if(collisionIndex != -1)
 		{
@@ -59,7 +62,7 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		
 		for(Ghost ghost: handler.getWorld().getGhostManager().getGhosts())
 		{
-			if(ghost.collisionWithPlayer() && !ghost.isDead())
+			if(collisionPlayerAndGhost(ghost))
 			{
 				ghostCollisionObjects.add(ghost);
 			}
@@ -72,6 +75,37 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		}
 	}
 
+	public int getStaticEntityCollisionIndex(Player player, float xOffset, float yOffset)
+	{
+		int index = -1, i = 0;
+		
+		for(Entity e: handler.getWorld().getStaticEntityManager().getEntities())
+		{
+			if(e.getEntityCollisionBounds(0f, 0f).intersects(player.getEntityCollisionBounds(xOffset, yOffset)))
+			{
+				index = i;
+			}
+			i++;
+		}
+		
+		return index;
+	}
+	
+	public boolean collisionPlayerAndGhost(Ghost ghost)
+	{
+		boolean check = false;
+		
+		if(handler.getWorld().getPlayer().getEntityCollisionBounds(0f, 0f).intersects(ghost.getEntityCollisionBounds(0f,0f)))
+		{
+			check = true;
+		}
+		
+		return check;
+	}
+	
+	
+	//GETTERS AND SETTERS
+	
 	public StaticEntity getStaticCollisionObject()
 	{
 		return staticCollisionObject;

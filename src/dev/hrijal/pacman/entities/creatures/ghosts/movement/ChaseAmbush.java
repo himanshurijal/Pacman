@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.ghostMovement;
+package dev.hrijal.pacman.entities.creatures.ghosts.movement;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +8,7 @@ import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.input.KeyManager;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ChaseAmbush implements ChaseMode
+public class ChaseAmbush implements ChaseBehavior
 {
 
 	private Handler handler;
@@ -39,35 +39,41 @@ public class ChaseAmbush implements ChaseMode
 		g.drawRect((int) destX, (int) destY, 10, 10);
 	}
 
-	public float getAmbushDestX(float destX)
+	public float getAmbushDestX(float playerX)
 	{
 		KeyManager key = handler.getGame().getKeyManager();
-		float ambushDestX = (int) ((destX / Tile.TILEWIDTH) * Tile.TILEWIDTH) + Tile.TILEWIDTH / 3;
+
+		float ambushDestX = playerX;
 		
 		if(key.left)
 		{
-			ambushDestX -= ghost.getSpeed() * 30;
+			ambushDestX -= Tile.TILEWIDTH * 2;
 		}
 		else if(key.right)
 		{
-			ambushDestX += ghost.getSpeed() * 30;
+			ambushDestX += Tile.TILEWIDTH * 2;
 		}
-
+		else if(key.up)
+		{
+			ambushDestX -= Tile.TILEWIDTH * 2;
+		}
+		
 		return ambushDestX;
 	}
 	
-	public float getAmbushDestY(float destY)
+	public float getAmbushDestY(float playerY)
 	{
 		KeyManager key = handler.getGame().getKeyManager();
-		float ambushDestY = (int) ((destY / Tile.TILEHEIGHT) * Tile.TILEHEIGHT) + Tile.TILEHEIGHT / 3;
+
+		float ambushDestY = playerY;
 		
 		if(key.up)
 		{
-			ambushDestY -= ghost.getSpeed() * 30;
+			ambushDestY -= Tile.TILEHEIGHT * 2;
 		}
 		else if(key.down)
 		{
-			ambushDestY += ghost.getSpeed() * 30;
+			ambushDestY += Tile.TILEHEIGHT * 2;
 		}
 
 		return ambushDestY;
