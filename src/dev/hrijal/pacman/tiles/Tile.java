@@ -53,7 +53,7 @@ public class Tile
 	{
 		return false;
 	}
-	
+
 	//GETTERS AND SETTERS
 	
 	public int getId()

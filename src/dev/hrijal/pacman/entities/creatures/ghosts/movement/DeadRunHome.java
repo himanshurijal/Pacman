@@ -13,7 +13,7 @@ public class DeadRunHome implements DeadBehavior
 	public DeadRunHome(Ghost ghost)
 	{
 		this.ghost = ghost;
-		tempSpeed= ghost.getSpeed() * 2;
+		tempSpeed = ghost.getSpeed() * 2;
 	}
 
 	public void runToHome()

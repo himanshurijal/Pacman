@@ -41,22 +41,16 @@ public abstract class GhostState
 		lastTime = 0;
 	}
 	
-	public void playerCollisionWithCapsule() //Overridden in AtHomeState
+	public void playerCollisionWithCapsule() //Overridden in FrightenedState
 	{
+		ghost.setLastState(ghost.getState());
+		ghost.setLastStateTimer(timer);
+
 		resetTimer();
+		
 		ghost.setState(ghost.getFrightenedState());
-//		ghost.setLastState(ghost.getState());
-//		ghost.setLastStateLastTime(timer);
-//		ghost.setLastStateLastTime(lastTime);
-//		
-//		resetTimer();
-//		
-//		ghost.setState(ghost.getFrightenedState());
-//		
-//		System.out.println(ghost.getLastState());
-//		System.out.println();
 	}
-	
+
 	public void ghostCollisionWithPlayer() //Overridden in FrightenedState and DeadState
 	{
 		ghost.killPlayer();
@@ -68,6 +62,16 @@ public abstract class GhostState
 	public void setDuration(long duration)
 	{
 		this.duration = duration;
+	}
+
+	public void setTimer(long timer)
+	{
+		this.timer = timer;
+	}
+
+	public void setLastTime(long lastTime)
+	{
+		this.lastTime = lastTime;
 	}
 	
 }

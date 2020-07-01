@@ -58,13 +58,5 @@ public class AtHomeState extends GhostState
 			return movement[0];
 		}
 	}
-	
-	@Override
-	public void playerCollisionWithCapsule()
-	{
-		ghost.setSecondaryTimer(timer);
-		resetTimer();
-		ghost.setState(ghost.getFrightenedState());
-	}
-	
+
 }

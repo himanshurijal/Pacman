@@ -36,12 +36,10 @@ public class Ghost extends Creature
 	
 	private GhostState currState;
 	
-	private GhostState lastState;	//Needed for storing the last active state in case ghosts go into frightened mode
-	private long lastStateTimer;
-	private long lastStateLastTime;
+	private GhostState lastState;	//Needed for storing the last active state in case ghosts go into frightened state
+	private long lastStateTimer;	//Once ghosts exit frightened state their state will be restored to the last state
+	private long lastStateLastTime; //they were in.
 	
-	private long secondaryTimer, secondaryLastTime;
-	private long atHomeDuration; 
 	public static final long  SCATTERED_DURATION = 7000, //Calculated in milliseconds
 	   		  				  CHASING_DURATION = 20000,
 							  FRIGHTENED_DURATION = 8000,  
@@ -49,7 +47,7 @@ public class Ghost extends Creature
 					   		  DEAD_DURATION = 100;
 	
 	//MOVEMENT
-	float[] lastAdjNode;
+	private float[] lastAdjNode;
 	
 	private ScatterBehavior scatterBehavior;
 	private ChaseBehavior chaseBehavior;
@@ -73,9 +71,6 @@ public class Ghost extends Creature
 		lastStateTimer = 0;
 		lastStateLastTime = 0;
 		
-		secondaryTimer = 0;
-		secondaryLastTime = 0;
-		
 		//Movement
 		lastAdjNode = new float[2];
 		lastAdjNode[0] = -1.0f;
@@ -94,17 +89,7 @@ public class Ghost extends Creature
 
 	@Override
 	public void tick() 
-	{		
-		if(secondaryTimer != 0) //Only gets initiated if ghosts are at home but player eats capsule
-		{		
-			incrementSecondaryTimer();
-			
-			if(secondaryTimer >= atHomeDuration + SCATTERED_DURATION)
-			{
-				resetSecondaryTimer();
-			}
-		}
-		
+	{				
 		currState.checkTimer();
 		currState.makeNextMove();
 	}
@@ -299,28 +284,6 @@ public class Ghost extends Creature
 		deadBehavior.runToHome();
 	}
 	
-	public ScatterBehavior getScatterBehavior() 
-	{
-		return scatterBehavior;
-	}
-	
-	public void incrementSecondaryTimer()
-	{
-		if(secondaryLastTime == 0)
-		{
-			secondaryLastTime = System.currentTimeMillis();
-		}
-		
-		secondaryTimer += System.currentTimeMillis() - secondaryLastTime;
-		secondaryLastTime = System.currentTimeMillis();
-	}
-	
-	public void resetSecondaryTimer()
-	{
-		secondaryTimer = 0;
-		secondaryLastTime = 0;
-	}
-	
 	public BufferedImage getCurrentFrame()
 	{
 		return currState.getCurrentFrame();
@@ -350,13 +313,7 @@ public class Ghost extends Creature
 	
 	public void setAtHomeDuration(long duration)
 	{
-		atHomeDuration = duration;
 		atHomeState.setDuration(duration);
-	}
-
-	public long getAtHomeDuration()
-	{
-		return atHomeDuration;
 	}
 
 	public GhostState getAtHomeState() 
@@ -425,21 +382,6 @@ public class Ghost extends Creature
 	}
 	
 	//MOVEMENT
-	
-	public long getSecondaryTimer()
-	{
-		return secondaryTimer;
-	}
-	
-	public void setSecondaryTimer(long secondaryTimer)
-	{
-		this.secondaryTimer = secondaryTimer;
-	}
-	
-	public void setSecondaryLastTime(long secondaryLastTime)
-	{
-		this.secondaryLastTime = secondaryLastTime;
-	}
 	
 	public void setScatterBehavior(ScatterBehavior scatterBehavior) 
 	{

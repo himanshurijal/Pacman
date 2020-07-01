@@ -20,11 +20,10 @@ public class DeadState extends GhostState
 	public void checkTimer()
 	{
 		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
-		{
-//			timer = ghost.getLastStateTimer();
-//		    lastTime = ghost.getLastStateLastTime();
-//			ghost.setState(ghost.getLastState());
-			ghost.setState(ghost.getScatteredState());
+		{			
+			ghost.getLastState().setTimer(ghost.getLastStateTimer());
+			ghost.getLastState().setLastTime(System.currentTimeMillis());
+			ghost.setState(ghost.getLastState());
 		}
 	}
 	
@@ -61,6 +60,12 @@ public class DeadState extends GhostState
 	
 	@Override
 	public void ghostCollisionWithPlayer()
+	{
+		//Do nothing
+	}
+	
+	@Override
+	public void playerCollisionWithCapsule() //Overridden in AtHomeState
 	{
 		//Do nothing
 	}

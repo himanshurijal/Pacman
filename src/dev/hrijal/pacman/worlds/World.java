@@ -58,7 +58,7 @@ public class World
 		{
 			currTileX = 0;
 			
-			for(int tile: tileRow)
+			for(int tile: tileRow) //TODO: Try to implement FlyWeight pattern to make rendering more efficient
 			{
 				if(tile == 1) //Tile with id 1 is reserved for edibles
 				{

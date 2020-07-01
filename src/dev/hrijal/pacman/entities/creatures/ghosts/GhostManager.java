@@ -10,6 +10,7 @@ import dev.hrijal.pacman.entities.Observer;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseAggressive;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseAmbush;
+import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChasePatrol;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseRelative;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadRunHome;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.FrightenedBottomLeftMid;
@@ -54,7 +55,7 @@ public class GhostManager implements Observer
 		
 		Ghost ghostOrange = new Ghost(handler, Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 11, Assets.ghostOrange);
 		ghostOrange.setScatterBehavior(new ScatterTopLeft(ghostOrange));
-		ghostOrange.setChaseBehavior(new ChaseAmbush(handler,ghostOrange));
+		ghostOrange.setChaseBehavior(new ChasePatrol(handler,ghostOrange));
 		ghostOrange.setFrightenedBehavior(new FrightenedBottomLeftMid(ghostOrange));
 		ghostOrange.setDeadBehavior(new DeadRunHome(ghostOrange));
 			

@@ -20,21 +20,21 @@ public class ChasingState extends GhostState
 	@Override
 	public void checkTimer()
 	{
-//		if(switchedStateCount <= 4) //Switch to scattered state after every chasing duration limit
-//		{
-//			incrementTimer();
-//			
-//			if(timer >= duration)
-//			{
-//				resetTimer();
-//				ghost.setState(ghost.getScatteredState());
-//			}
-//		}
-//		else
-//		{
-//			//Once state has been switched to scattered state for four times remain in chasing state indefinitely
-//		}
-
+		if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
+		{
+			incrementTimer();
+			
+			if(timer >= duration)
+			{
+				switchedStateCount++;
+				resetTimer();
+				ghost.setState(ghost.getScatteredState());
+			}
+		}
+		else
+		{
+			//Once state has been switched to scattered state for four times remain in chasing state indefinitely
+		}
 	}
 	
 	@Override

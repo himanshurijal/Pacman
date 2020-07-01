@@ -18,12 +18,11 @@ public class GateTile extends Tile
 	{
 		return true;
 	}
-	
+
 	@Override
 	public boolean isSolid(Ghost ghost)
 	{
-		if(ghost.getState() instanceof ScatteredState || ghost.getState() instanceof DeadState 
-													|| ghost.getSecondaryTimer() >= ghost.getAtHomeDuration())
+		if(ghost.getState() instanceof ScatteredState || ghost.getState() instanceof DeadState)
 		{
 			return false;
 		}

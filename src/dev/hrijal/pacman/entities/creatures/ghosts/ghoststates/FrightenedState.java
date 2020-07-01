@@ -27,15 +27,12 @@ public class FrightenedState extends GhostState
 		if(timer >= duration)
 		{
 			resetTimer();
-			ghost.setState(ghost.getChasingState());
-//			System.out.println("Here! " + ghost.getLastState());
-//			System.out.println();
-//			
-//			resetTimer();
-//			
-//			timer = ghost.getLastStateTimer();
-//		    lastTime = ghost.getLastStateLastTime();
-//			ghost.setState(ghost.getLastState());
+			
+			adjustGhostXY(); 
+			
+			ghost.getLastState().setTimer(ghost.getLastStateTimer());
+			ghost.getLastState().setLastTime(System.currentTimeMillis());
+			ghost.setState(ghost.getLastState());
 		}
 	}
 	
@@ -57,7 +54,13 @@ public class FrightenedState extends GhostState
 			animFlashing.tick();
 			return animFlashing.getCurrentFrame();
 		}
-
+	}
+	
+	@Override
+	public void playerCollisionWithCapsule()
+	{
+		resetTimer();
+		ghost.setState(ghost.getFrightenedState());
 	}
 	
 	@Override
@@ -65,13 +68,20 @@ public class FrightenedState extends GhostState
 	{
 		resetTimer();
 		
+		adjustGhostXY();
+		
+		ghost.setState(ghost.getDeadState());
+	}
+	
+	public void adjustGhostXY() //We need to adjust ghosts' XY coordinates to the nearest tile coordinates
+								//to make sure collision detection works properly (since speed is halved
+								//when ghosts are frightened)
+	{
 		float adjustedX = Math.round(ghost.getX() / Tile.TILEWIDTH) * Tile.TILEWIDTH;
 		float adjustedY = Math.round(ghost.getY() / Tile.TILEHEIGHT) * Tile.TILEHEIGHT;
 		
 		ghost.setX(adjustedX);
 		ghost.setY(adjustedY);
-		
-		ghost.setState(ghost.getDeadState());
 	}
 	
 }
