@@ -5,6 +5,7 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
@@ -62,7 +63,7 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		
 		for(Ghost ghost: handler.getWorld().getGhostManager().getGhosts())
 		{
-			if(collisionPlayerAndGhost(ghost))
+			if(collisionPlayerAndGhost(ghost) && !(ghost.getState() instanceof DeadState))
 			{
 				ghostCollisionObjects.add(ghost);
 			}

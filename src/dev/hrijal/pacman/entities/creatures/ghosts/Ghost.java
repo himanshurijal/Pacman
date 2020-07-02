@@ -1,5 +1,6 @@
 package dev.hrijal.pacman.entities.creatures.ghosts;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -99,11 +100,11 @@ public class Ghost extends Creature
 	{
 		g.drawImage(getCurrentFrame(), (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
 		
-//		g.setColor(Color.white);
-//		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
-//				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
-//		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
-//													 entityCollisionBounds.width, entityCollisionBounds.height);
+		g.setColor(Color.white);
+		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
+				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
+		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
+													 entityCollisionBounds.width, entityCollisionBounds.height);
 		chaseBehavior.render(g);
 	}
 	

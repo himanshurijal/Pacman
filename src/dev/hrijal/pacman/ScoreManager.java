@@ -12,6 +12,8 @@ import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.AtHomeState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ChasingState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
 import dev.hrijal.pacman.tiles.Tile;
 
@@ -21,7 +23,7 @@ public class ScoreManager implements Observer
 	private int highScore;
 	private List<Integer> ghostPoints;
 	private List<List<Integer>> ghostCollisionCoordinates;
-	private static final long SCORE_DISPLAY_DURATION = 5000;
+	private static final long SCORE_DISPLAY_DURATION = 1000;
 	private long timer;
 	private long lastTime;
 	
@@ -49,8 +51,7 @@ public class ScoreManager implements Observer
 			
 			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
 			{
-				if(!(ghost.getState() instanceof AtHomeState) && (ghost.getState() instanceof ScatteredState) 
-																&& !(ghost.getState() instanceof ChasingState))
+				if(ghost.getState() instanceof FrightenedState || ghost.getState() instanceof DeadState)
 				{
 					currScore += ghostPoints.get(0);
 					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 
@@ -74,12 +75,15 @@ public class ScoreManager implements Observer
 		g.drawString("Current Score: " + currScore, Tile.TILEWIDTH / 2, Tile.TILEHEIGHT / 2 + 5);
 		g.drawString("High Score: " + highScore, Tile.TILEWIDTH * 19, Tile.TILEHEIGHT / 2 + 5);
 		
-		incrementTimer();
-		
-		for(List<Integer> coordinates: ghostCollisionCoordinates)
+		for(List<Integer> coordinates: ghostCollisionCoordinates) //Move this code to tick method
 		{
 			g.setColor(Color.green);
-			g.drawString(ghostPoints.get(0).toString(), coordinates.get(0) - 5,  coordinates.get(1));
+			g.drawString(ghostPoints.get(0).toString(), coordinates.get(0) - 5,  coordinates.get(1) + 5);
+		}
+		
+		if(ghostCollisionCoordinates.size() != 0)
+		{
+			incrementTimer();
 		}
 		
 		if(timer >= SCORE_DISPLAY_DURATION)
