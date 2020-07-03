@@ -1,15 +1,18 @@
 package dev.hrijal.pacman;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+
 import dev.hrijal.pacman.display.Display;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.input.KeyManager;
 import dev.hrijal.pacman.input.MouseManager;
 import dev.hrijal.pacman.states.GameState;
+import dev.hrijal.pacman.states.HelpState;
 import dev.hrijal.pacman.states.MainMenuState;
+import dev.hrijal.pacman.states.QuitState;
 import dev.hrijal.pacman.states.State;
-
-import java.awt.*;
-import java.awt.image.BufferStrategy;
 
 public class Game implements Runnable
 {
@@ -26,8 +29,10 @@ public class Game implements Runnable
 	private Graphics g;
 	
 	//STATES 
-	private State gameState;
 	private State mainMenuState;
+	private State gameState;
+	private State helpState;
+	private State quitState;
 	
 	//INPUT
 	private KeyManager keyManager;
@@ -38,7 +43,6 @@ public class Game implements Runnable
 	
 	Game(String title, int width,int height)
 	{
-		//No significant additions
 		this.isRunning = false;
 		
 		this.title = title;
@@ -62,11 +66,12 @@ public class Game implements Runnable
 		 
 		handler = new Handler(this);
 		
+		mainMenuState = new MainMenuState(handler);
 		gameState = new GameState(handler);
-		State.setState(gameState); 
+		helpState = new HelpState(handler);
+		quitState = new QuitState(handler);
 		
-//		mainMenuState = new MainMenuState(handler);
-//		State.setState(mainMenuState);
+		State.setState(mainMenuState);
 	}
 	
 	private void tick()
@@ -79,7 +84,7 @@ public class Game implements Runnable
 		}	
 	}
 	
-	private void render() //Draw object in the screen
+	private void render()
 	{
 		bs = display.getCanvas().getBufferStrategy();
 		
@@ -95,7 +100,7 @@ public class Game implements Runnable
 			
 			g.setColor(Color.black);
 			g.fillRect(0, 0, width, height);
-			
+
 			if(State.getState() != null)
 			{
 				State.getState().render(g);
@@ -145,6 +150,7 @@ public class Game implements Runnable
 				timer = 0;
 			}
 		}
+		
 		stop();
 	}
 
@@ -171,7 +177,8 @@ public class Game implements Runnable
 		try 
 		{
 			thread.join();
-		} catch (InterruptedException e) 
+		} 
+		catch (InterruptedException e) 
 		{
 			e.printStackTrace();
 		}
@@ -190,19 +197,24 @@ public class Game implements Runnable
 		return height;
 	}
 
+	public State getMainMenuState()
+	{
+		return mainMenuState;
+	}
+	
 	public State getGameState() 
 	{
 		return gameState;
 	}
 	
-	public void setGameState(State gameState) 
+	public State getHelpState() 
 	{
-		this.gameState = gameState;
+		return helpState;
 	}
-
-	public State getMainMenuState()
+	
+	public State getQuitState() 
 	{
-		return mainMenuState;
+		return quitState;
 	}
 	
 	public KeyManager getKeyManager()

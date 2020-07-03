@@ -30,7 +30,7 @@ public class Display
 		
 		canvas = new Canvas();
 		//Ensure that the canvas will always be of the size specified
-		canvas.setPreferredSize(new Dimension(width,height)); //new Dimension(width,height)
+		canvas.setPreferredSize(new Dimension(width,height));
 		canvas.setMinimumSize(new Dimension(width,height));
 		canvas.setMaximumSize(new Dimension(width,height));
 		canvas.setFocusable(false); //Make it so that our JFrame is the only thing that can be focused

@@ -8,23 +8,7 @@ public class MouseManager implements MouseListener, MouseMotionListener
 {
 	private boolean leftPressed, rightPressed;
 	private int mouseX, mouseY;
-	
-	
-	@Override
-	public void mouseClicked(MouseEvent e) 
-	{
-		if(e.getButton() == MouseEvent.BUTTON1)
-		{
-			leftPressed = true;
-		}
-		else if(e.getButton() == MouseEvent.BUTTON3)
-		{
-			rightPressed = true;
-		}
-	}
-
-	//INTERFACE IMPLEMENTATIONS
-	
+		
 	@Override
 	public void mouseReleased(MouseEvent e) 
 	{
@@ -48,8 +32,20 @@ public class MouseManager implements MouseListener, MouseMotionListener
 	@Override
 	public void mousePressed(MouseEvent e) 
 	{
+		if(e.getButton() == MouseEvent.BUTTON1)
+		{
+			leftPressed = true;
+		}
+		else if(e.getButton() == MouseEvent.BUTTON3)
+		{
+			rightPressed = true;
+		}
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) 
+	{
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

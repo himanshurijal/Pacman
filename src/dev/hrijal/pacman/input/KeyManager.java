@@ -7,7 +7,7 @@ public class KeyManager implements KeyListener
 {
 
 	private boolean[] keys;
-	public boolean up, down, left, right;
+	public boolean up, down, left, right, esc;
 	
 	public KeyManager() //Every key on the computer has an id attached to it called the keyCode
 	{
@@ -20,6 +20,7 @@ public class KeyManager implements KeyListener
 		down = keys[KeyEvent.VK_S];
 		left = keys[KeyEvent.VK_A];
 		right = keys[KeyEvent.VK_D];
+		esc = keys[KeyEvent.VK_ESCAPE];
 	}
 	
 	@Override
