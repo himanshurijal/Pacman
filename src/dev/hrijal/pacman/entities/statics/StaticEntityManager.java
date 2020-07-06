@@ -7,10 +7,11 @@ import java.util.List;
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.Entity;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
-import dev.hrijal.pacman.entities.Observer;
+import dev.hrijal.pacman.entities.GhostCollisionObserver;
+import dev.hrijal.pacman.entities.StaticCollisionObserver;
 import dev.hrijal.pacman.entities.Subject;
 
-public class StaticEntityManager implements Observer
+public class StaticEntityManager implements StaticCollisionObserver
 {
 	
 	private List<StaticEntity> staticEntities;
@@ -18,7 +19,7 @@ public class StaticEntityManager implements Observer
 	public StaticEntityManager(Handler handler, List<StaticEntity> staticEntities, EntityCollisionManager entityCollisionManager)
 	{
 		this.staticEntities = new ArrayList<>(staticEntities);
-		entityCollisionManager.registerObserver(this);
+		entityCollisionManager.registerStaticCollisionObserver(this);
 	}
 	
 	public void tick()
@@ -42,7 +43,8 @@ public class StaticEntityManager implements Observer
 		staticEntities.remove(index);
 	}
 	
-	public void update(Subject subject)
+	@Override
+	public void updateOnStaticCollision(Subject subject) 
 	{
 		if(subject instanceof EntityCollisionManager)
 		{

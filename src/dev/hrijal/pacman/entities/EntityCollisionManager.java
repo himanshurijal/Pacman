@@ -10,49 +10,82 @@ import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
-public class EntityCollisionManager implements Subject  //TODO: Try to implement Facade Pattern and the principle of least knowledge
+public class EntityCollisionManager implements Subject 
 {
 	
 	private Handler handler;
-	private List<Observer> observers; //Observer classes: ScoreManager, GhostManager, StaticEntityManager
+	
+	private List<GhostCollisionObserver> ghostCollisionObservers; 	//Observer classes: ScoreManager, GhostManager
+	private List<Ghost> ghostCollisionObjects;
+	
+	private List<StaticCollisionObserver> staticCollisionObservers; //Observer classes: ScoreManager, GhostManager, StaticEntityManager
 	private StaticEntity staticCollisionObject;
 	private int capsuleCount;
-	private List<Ghost> ghostCollisionObjects;
 	
 	public EntityCollisionManager(Handler handler)
 	{
 		this.handler = handler;
-		observers = new ArrayList<>();
+		
+		ghostCollisionObservers = new ArrayList<>();
+		ghostCollisionObjects = new ArrayList<>();
+		
+		staticCollisionObservers = new ArrayList<>();
 		staticCollisionObject = null;
 		capsuleCount = 0;
-		ghostCollisionObjects = new ArrayList<>();
 	}
 	
-	public void registerObserver(Observer o)
+	@Override
+	public void registerGhostCollisionObserver(GhostCollisionObserver o)
 	{
-		observers.add(o);
+		ghostCollisionObservers.add(o);
 	}
 	
-	public void removeObserver(Observer o)
+	@Override
+	public void registerStaticCollisionObserver(StaticCollisionObserver o)
 	{
-		int index = observers.indexOf(o);
+		staticCollisionObservers.add(o);
+	}
+
+	@Override
+	public void removeGhostCollisionObserver(GhostCollisionObserver o)
+	{
+		int index = ghostCollisionObservers.indexOf(o);
 		
 		if(index >= 0)
 		{
-			observers.remove(o);
+			ghostCollisionObservers.remove(o);
 		}
 	}
 	
-	public void notifyObservers()
+	@Override
+	public void removeStaticCollisionObserver(StaticCollisionObserver o)
 	{
-		for(Observer o: observers)
+		int index = staticCollisionObservers.indexOf(o);
+		
+		if(index >= 0)
 		{
-			o.update(this);
+			staticCollisionObservers.remove(o);
+		}	
+	}
+	
+	public void notifyGhostCollisionObservers()
+	{
+		for(GhostCollisionObserver o: ghostCollisionObservers)
+		{
+			o.updateOnGhostCollision(this);
 		}
 	}
 	
-	public void checkCollisionAndNotify() //Might need to create two sets of observers or create two different subject classes to handle
-										  //different types of collision
+	@Override
+	public void notifyStaticCollisionObservers()
+	{
+		for(StaticCollisionObserver o: staticCollisionObservers)
+		{
+			o.updateOnStaticCollision(this);
+		}
+	}
+	
+	public void checkStaticCollisionAndNotify()
 	{
 		Player player = handler.getWorld().getPlayer();
 		
@@ -65,10 +98,13 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 			{
 				capsuleCount++;
 			}
-			notifyObservers();
+			notifyStaticCollisionObservers();
 			staticCollisionObject = null;
 		}
-		
+	}
+	
+	public void checkGhostCollisionAndNotify()
+	{	
 		for(Ghost ghost: handler.getWorld().getGhostManager().getGhosts())
 		{
 			if(collisionPlayerAndGhost(ghost) && !(ghost.getState() instanceof DeadState))
@@ -79,11 +115,11 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		
 		if(ghostCollisionObjects.size() > 0)
 		{
-			notifyObservers();
+			notifyGhostCollisionObservers();
 			ghostCollisionObjects.clear();
 		}
 	}
-
+	
 	public int getStaticEntityCollisionIndex(Player player, float xOffset, float yOffset)
 	{
 		int index = -1, i = 0;

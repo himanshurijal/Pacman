@@ -8,66 +8,51 @@ import java.util.Arrays;
 import java.util.List;
 
 import dev.hrijal.pacman.entities.EntityCollisionManager;
-import dev.hrijal.pacman.entities.Observer;
+import dev.hrijal.pacman.entities.GhostCollisionObserver;
+import dev.hrijal.pacman.entities.StaticCollisionObserver;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ScoreManager implements Observer
+public class ScoreManager implements GhostCollisionObserver, StaticCollisionObserver
 {
 	
+	//PLAYER SCORE
 	private int currScore;
 	private int highScore;
+	
+	//GHOST POINTS
 	private List<Integer> ghostPoints;
+	private int capsuleCount;
 	private int ghostPointsIndex;
 	private List<List<Integer>> ghostCollisionCoordinates;
-	private int capsuleCount;
+
+	//TIMER
 	public static final long SCORE_DISPLAY_DURATION = 1000;
 	private long timer;
 	private long lastTime;
 	
 	public ScoreManager(EntityCollisionManager entityCollisionManager)
 	{
+		//Player Score
 		currScore = 0;
 		highScore = 0;
+		
+		//Ghost Points
 		ghostPoints = new ArrayList<>(Arrays.asList(200,400,800,1600));
+		capsuleCount = 0;
 		ghostPointsIndex = 0;
 		ghostCollisionCoordinates = new ArrayList<>();
-		capsuleCount = 0;
+
+		//Timer
 		timer = 0;
 		lastTime = 0;
-		entityCollisionManager.registerObserver(this);
-	}
-	
-	public void update(Subject subject)
-	{			
-		if(subject instanceof EntityCollisionManager)
-		{
-			EntityCollisionManager entityCollisionManager = (EntityCollisionManager) subject;
-			
-			if(entityCollisionManager.getStaticCollisionObject() != null)
-			{
-				currScore += entityCollisionManager.getStaticCollisionObject().getPoints();
-			}
-			
-			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
-			{
-				if(ghost.getState() instanceof FrightenedState || ghost.getState() instanceof DeadState)
-				{
-					if(capsuleCount != entityCollisionManager.getCapsuleCount())
-					{
-						ghostPointsIndex = 0;
-						capsuleCount = entityCollisionManager.getCapsuleCount();
-					}
-					currScore += ghostPoints.get(ghostPointsIndex);
-					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 
-																ghost.getEntityCollisionBounds(0f,0f).y));
-					ghostPointsIndex++;
-				}
-			}
-		}
+		
+		//Register as observer
+		entityCollisionManager.registerGhostCollisionObserver(this);
+		entityCollisionManager.registerStaticCollisionObserver(this);
 	}
 	
 	public void tick()
@@ -97,12 +82,52 @@ public class ScoreManager implements Observer
 		g.drawString("Current Score: " + currScore, Tile.TILEWIDTH / 2, Tile.TILEHEIGHT / 2 + 5);
 		g.drawString("High Score: " + highScore, Tile.TILEWIDTH * 19 - 10, Tile.TILEHEIGHT / 2 + 5);
 		
-		for(List<Integer> coordinates: ghostCollisionCoordinates) //Move this code to tick method
+		for(List<Integer> coordinates: ghostCollisionCoordinates)
 		{
 			g.setColor(Color.green);
 			g.setFont(new Font("arial", Font.PLAIN, 15));
 			g.drawString(ghostPoints.get(ghostPointsIndex - 1).toString(), coordinates.get(0) - 5,  coordinates.get(1) + 10);
 		}
+	}
+
+	@Override
+	public void updateOnStaticCollision(Subject subject) 
+	{
+		if(subject instanceof EntityCollisionManager)
+		{
+			EntityCollisionManager entityCollisionManager = (EntityCollisionManager) subject;
+			
+			if(entityCollisionManager.getStaticCollisionObject() != null)
+			{
+				currScore += entityCollisionManager.getStaticCollisionObject().getPoints();
+			}
+		}
+	}
+
+	@Override
+	public void updateOnGhostCollision(Subject subject) 
+	{
+		if(subject instanceof EntityCollisionManager)
+		{
+			EntityCollisionManager entityCollisionManager = (EntityCollisionManager) subject;
+			
+			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
+			{
+				if(ghost.getState() instanceof FrightenedState || ghost.getState() instanceof DeadState)
+				{
+					if(capsuleCount != entityCollisionManager.getCapsuleCount())
+					{
+						ghostPointsIndex = 0;
+						capsuleCount = entityCollisionManager.getCapsuleCount();
+					}
+					currScore += ghostPoints.get(ghostPointsIndex);
+					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 
+																ghost.getEntityCollisionBounds(0f,0f).y));
+					ghostPointsIndex++;
+				}
+			}
+		}
+		
 	}
 	
 	public void incrementTimer()

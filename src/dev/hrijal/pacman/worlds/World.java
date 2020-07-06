@@ -115,7 +115,8 @@ public class World
 		
 		ghostManager.tick();
 		
-		entityCollisionManager.checkCollisionAndNotify();
+		entityCollisionManager.checkStaticCollisionAndNotify();
+		entityCollisionManager.checkGhostCollisionAndNotify();
 		
 		scoreManager.tick();
 	}

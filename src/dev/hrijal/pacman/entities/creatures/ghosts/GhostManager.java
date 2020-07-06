@@ -6,7 +6,8 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
-import dev.hrijal.pacman.entities.Observer;
+import dev.hrijal.pacman.entities.GhostCollisionObserver;
+import dev.hrijal.pacman.entities.StaticCollisionObserver;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseAggressive;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseAmbush;
@@ -25,7 +26,7 @@ import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class GhostManager implements Observer
+public class GhostManager implements GhostCollisionObserver, StaticCollisionObserver
 {
 	
 	private List<Ghost> ghosts;
@@ -78,7 +79,9 @@ public class GhostManager implements Observer
 		ghosts.add(ghostGreen);
 		ghosts.add(ghostOrange);
 		
-		entityCollisionManager.registerObserver(this);
+		//Register as observer
+		entityCollisionManager.registerStaticCollisionObserver(this);
+		entityCollisionManager.registerGhostCollisionObserver(this);
 	}
 	
 	public void tick()
@@ -97,7 +100,8 @@ public class GhostManager implements Observer
 		}
 	}
 	
-	public void update(Subject subject)
+	@Override
+	public void updateOnStaticCollision(Subject subject) 
 	{
 		if(subject instanceof EntityCollisionManager)
 		{
@@ -110,7 +114,16 @@ public class GhostManager implements Observer
 					ghost.getState().playerCollisionWithCapsule();
 				}
 			}
-			
+		}
+	}
+
+	@Override
+	public void updateOnGhostCollision(Subject subject) 
+	{
+		if(subject instanceof EntityCollisionManager)
+		{
+			EntityCollisionManager entityCollisionManager = (EntityCollisionManager) subject;
+
 			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
 			{				
 				Ghost currGhost = ghosts.get(ghosts.indexOf(ghost));
@@ -118,7 +131,6 @@ public class GhostManager implements Observer
 			}
 		}
 	}
-	
 	
 	//GETTERS AND SETTERS
 	
