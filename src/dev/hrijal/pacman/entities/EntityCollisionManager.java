@@ -7,6 +7,7 @@ import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
+import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
 public class EntityCollisionManager implements Subject  //TODO: Try to implement Facade Pattern and the principle of least knowledge
@@ -15,6 +16,7 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 	private Handler handler;
 	private List<Observer> observers; //Observer classes: ScoreManager, GhostManager, StaticEntityManager
 	private StaticEntity staticCollisionObject;
+	private int capsuleCount;
 	private List<Ghost> ghostCollisionObjects;
 	
 	public EntityCollisionManager(Handler handler)
@@ -22,6 +24,7 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		this.handler = handler;
 		observers = new ArrayList<>();
 		staticCollisionObject = null;
+		capsuleCount = 0;
 		ghostCollisionObjects = new ArrayList<>();
 	}
 	
@@ -48,7 +51,8 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		}
 	}
 	
-	public void checkCollisionAndNotify()
+	public void checkCollisionAndNotify() //Might need to create two sets of observers or create two different subject classes to handle
+										  //different types of collision
 	{
 		Player player = handler.getWorld().getPlayer();
 		
@@ -57,6 +61,10 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 		if(collisionIndex != -1)
 		{
 			staticCollisionObject = handler.getWorld().getStaticEntityManager().getEntities().get(collisionIndex);
+			if(staticCollisionObject instanceof Capsule)
+			{
+				capsuleCount++;
+			}
 			notifyObservers();
 			staticCollisionObject = null;
 		}
@@ -110,6 +118,11 @@ public class EntityCollisionManager implements Subject  //TODO: Try to implement
 	public StaticEntity getStaticCollisionObject()
 	{
 		return staticCollisionObject;
+	}
+	
+	public int getCapsuleCount()
+	{
+		return capsuleCount;
 	}
 	
 	public List<Ghost> getGhostCollisionObjects()

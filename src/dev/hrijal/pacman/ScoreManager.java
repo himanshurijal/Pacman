@@ -21,7 +21,9 @@ public class ScoreManager implements Observer
 	private int currScore;
 	private int highScore;
 	private List<Integer> ghostPoints;
+	private int ghostPointsIndex;
 	private List<List<Integer>> ghostCollisionCoordinates;
+	private int capsuleCount;
 	public static final long SCORE_DISPLAY_DURATION = 1000;
 	private long timer;
 	private long lastTime;
@@ -30,8 +32,10 @@ public class ScoreManager implements Observer
 	{
 		currScore = 0;
 		highScore = 0;
-		ghostPoints = new ArrayList<>(Arrays.asList(200,400,600,800));
+		ghostPoints = new ArrayList<>(Arrays.asList(200,400,800,1600));
+		ghostPointsIndex = 0;
 		ghostCollisionCoordinates = new ArrayList<>();
+		capsuleCount = 0;
 		timer = 0;
 		lastTime = 0;
 		entityCollisionManager.registerObserver(this);
@@ -52,9 +56,15 @@ public class ScoreManager implements Observer
 			{
 				if(ghost.getState() instanceof FrightenedState || ghost.getState() instanceof DeadState)
 				{
-					currScore += ghostPoints.get(0);
+					if(capsuleCount != entityCollisionManager.getCapsuleCount())
+					{
+						ghostPointsIndex = 0;
+						capsuleCount = entityCollisionManager.getCapsuleCount();
+					}
+					currScore += ghostPoints.get(ghostPointsIndex);
 					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 
 																ghost.getEntityCollisionBounds(0f,0f).y));
+					ghostPointsIndex++;
 				}
 			}
 		}
@@ -91,8 +101,7 @@ public class ScoreManager implements Observer
 		{
 			g.setColor(Color.green);
 			g.setFont(new Font("arial", Font.PLAIN, 15));
-			
-			g.drawString(ghostPoints.get(0).toString(), coordinates.get(0) - 5,  coordinates.get(1) + 10);
+			g.drawString(ghostPoints.get(ghostPointsIndex - 1).toString(), coordinates.get(0) - 5,  coordinates.get(1) + 10);
 		}
 	}
 	

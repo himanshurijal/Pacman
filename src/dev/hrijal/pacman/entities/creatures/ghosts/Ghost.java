@@ -42,8 +42,8 @@ public class Ghost extends Creature
 	private long lastStateLastTime; //they were in.
 	
 	public static final long  SCATTERED_DURATION = 7000, //Calculated in milliseconds
-	   		  				  CHASING_DURATION = 20000,
-							  FRIGHTENED_DURATION = 8000,  
+	   		  				  CHASING_DURATION = 8000,
+							  FRIGHTENED_DURATION = 12000,  
 					   		  FLASHING_DURATION = 2000,
 					   		  DEAD_DURATION = 100;
 	
