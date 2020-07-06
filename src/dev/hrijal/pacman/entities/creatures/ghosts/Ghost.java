@@ -41,7 +41,7 @@ public class Ghost extends Creature
 	private long lastStateTimer;	//Once ghosts exit frightened state their state will be restored to the last state
 	private long lastStateLastTime; //they were in.
 	
-	public static final long  SCATTERED_DURATION = 7000, //Calculated in milliseconds
+	public static final long  SCATTERED_DURATION = 7000,
 	   		  				  CHASING_DURATION = 20000,
 							  FRIGHTENED_DURATION = 8000,  
 					   		  FLASHING_DURATION = 2000,
