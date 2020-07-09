@@ -25,8 +25,8 @@ public class ChaseRelative implements ChaseBehavior
 	
 	public void chase()
 	{
-		float ghostRedX = handler.getWorld().getGhostManager().getGhosts().get(0).getX();
-		float ghostRedY = handler.getWorld().getGhostManager().getGhosts().get(0).getY();
+		float ghostRedX = handler.getWorld().getGhosts().get(0).getX();
+		float ghostRedY = handler.getWorld().getGhosts().get(0).getY();
 		
 		float ambushDestX = getAmbushDestX(handler.getWorld().getPlayer().getX());
 		float ambushDestY = getAmbushDestY(handler.getWorld().getPlayer().getY());

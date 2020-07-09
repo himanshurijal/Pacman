@@ -57,7 +57,7 @@ public class Ghost extends Creature
 	
 	public Ghost(Handler handler, float x, float y, BufferedImage[] movementAssets)
 	{
-		super(handler, x, y, 200);
+		super(handler, x, y);
 			
 		//States
 		atHomeState = new AtHomeState(this, 0, movementAssets);
@@ -91,7 +91,7 @@ public class Ghost extends Creature
 	@Override
 	public void tick() 
 	{				
-		currState.checkTimer();
+		currState.checkTransitionToNextState();
 		currState.makeNextMove();
 	}
 
@@ -259,11 +259,6 @@ public class Ghost extends Creature
 	{
 		return (float) Math.sqrt(Math.pow(currGhostX - destX, 2) + Math.pow(currGhostY - destY, 2));
 	}
-
-	public void killPlayer()
-	{
-		handler.getWorld().getPlayer().setDead(true);
-	}
 	
 	public void scatter()
 	{
@@ -299,7 +294,7 @@ public class Ghost extends Creature
 		{
 			if(o1.get(4) < o2.get(4) || (o1.get(4) == o2.get(4) && o1.get(3) < o2.get(3))) //Sort by F value but 
 																				   		   //if F value is equal sort by H value
-				return -1;																   
+				return - 1;																   
 			else if(o1.get(4) > o2.get(4))
 				return 1;
 			else

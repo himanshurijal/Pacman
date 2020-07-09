@@ -23,9 +23,9 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 	private Animation animRight;
 	private Animation animDead;
 	
-	public Player(Handler handler, float x, float y, int points) 
+	public Player(Handler handler, float x, float y) 
 	{
-		super(handler, x, y, points);
+		super(handler, x, y);
 
 		isDead = false;
 		

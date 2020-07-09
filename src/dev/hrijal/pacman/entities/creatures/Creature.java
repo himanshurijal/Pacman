@@ -16,7 +16,7 @@ public abstract class Creature extends Entity
 	
 	protected Rectangle mazeCollisionBounds;
 	
-	public Creature(Handler handler, float x, float y, int points)
+	public Creature(Handler handler, float x, float y)
 	{
 		super(handler, x, y);
 		

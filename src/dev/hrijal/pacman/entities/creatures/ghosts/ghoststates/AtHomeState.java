@@ -17,21 +17,46 @@ public class AtHomeState extends GhostState
 	}
 
 	@Override
-	public void checkTimer() 
-	{
-		incrementTimer();
-		
-		if(timer >= duration)
+	public void checkTransitionToNextState()
+	{	
+//		incrementTimer();
+//		
+//		if(timer >= duration)
+//		{
+//			resetTimer();
+//			ghost.setState(ghost.getScatteredState());
+//		}
+//		
+		if(!currStateTimer.isTimerReady())
 		{
-			ghost.setState(ghost.getScatteredState());
-			resetTimer();
+			currStateTimer.readyTimer();
+		}
+		else
+		{
+			currStateTimer.incrementTimer();
+			
+			if(currStateTimer.isTimerExpired())
+			{
+				currStateTimer.resetTimer();
+				ghost.setState(ghost.getScatteredState());
+			}
 		}
 	}
 
 	@Override
 	public void makeNextMove()
 	{
-		ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
+//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
+//		
+//		if(pauseTimer == 0)
+//		{
+//			ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
+//		}
+		
+		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
+		{
+			ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
+		}
 	}
 	
 	@Override

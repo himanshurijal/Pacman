@@ -5,10 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.ScoreManager;
+import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
+import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.GhostManager;
 import dev.hrijal.pacman.entities.creatures.player.Player;
+import dev.hrijal.pacman.entities.creatures.player.PlayerManager;
+import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
 import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.Edible;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
@@ -23,23 +26,26 @@ public class World
 	private int[][] tiles;
 	private int width, height;
 	
-	//ENTITY COLLISION MANAGER
+	//ENTITY COLLISION
 	private EntityCollisionManager entityCollisionManager;
 	
 	//STATIC ENTITIES
 	private StaticEntityManager staticEntityManager;
 	
 	//PLAYER
-	private Player player;
+	private PlayerManager playerManager;
 	private int spawnX, spawnY;
-	
+
 	//GHOSTS
 	private GhostManager ghostManager;
 	
 	//SCOREBOARD
 	private ScoreManager scoreManager;
-
 	
+	//TIMER
+	public static final long GAME_START_DURATION = 3000;
+	private Timer gameStartTimer;
+
 	public World(String path, Handler handler)
 	{	
 		//Environment
@@ -70,19 +76,23 @@ public class World
 				}
 				currTileX += Tile.TILEWIDTH;
 			}
+			
 			currTileY += Tile.TILEHEIGHT;
 		}
 		
 		staticEntityManager = new StaticEntityManager(handler, staticEntities, entityCollisionManager);
 		
 		//Player
-		player = new Player(handler, spawnX, spawnY, 0);
+		playerManager = new PlayerManager(handler, spawnX, spawnY, entityCollisionManager);
 		
 		//Ghosts
 		ghostManager  = new GhostManager(handler, entityCollisionManager);
 		
 		//ScoreBoard
 		scoreManager = new ScoreManager(entityCollisionManager);
+		
+		//Timer
+		gameStartTimer = new Timer(GAME_START_DURATION);
 	}
 
 	public void loadWorld(String path)
@@ -109,16 +119,28 @@ public class World
 	
 	public void tick()
 	{
-		staticEntityManager.tick();
+		if(!gameStartTimer.isTimerReady())
+		{
+			gameStartTimer.readyTimer();
+		}
+		else
+		{
+			gameStartTimer.incrementTimer();
+		}
 		
-		player.tick();
-		
-		ghostManager.tick();
-		
-		entityCollisionManager.checkStaticCollisionAndNotify();
-		entityCollisionManager.checkGhostCollisionAndNotify();
-		
-		scoreManager.tick();
+		if(gameStartTimer.isTimerExpired()) 
+		{
+			staticEntityManager.tick();
+			
+			playerManager.tick();
+			
+			ghostManager.tick();
+			
+			entityCollisionManager.checkStaticCollisionAndNotify();
+			entityCollisionManager.checkGhostCollisionAndNotify();
+			
+			scoreManager.tick();
+		}
 	}
 	
 	public void render(Graphics g)
@@ -133,7 +155,7 @@ public class World
 		
 		staticEntityManager.render(g);
 		
-		player.render(g);
+		playerManager.render(g);
 		
 		ghostManager.render(g);
 	
@@ -184,20 +206,25 @@ public class World
 	{
 		return height;
 	}
-
-	public StaticEntityManager getStaticEntityManager() 
+	
+	public ScoreManager getScoreManager()
 	{
-		return staticEntityManager;
+		return scoreManager;
 	}
 	
 	public Player getPlayer()
 	{
-		return player;
+		return playerManager.getPlayer();
 	}
 	
-	public GhostManager getGhostManager() 
+	public List<Ghost> getGhosts()
 	{
-		return ghostManager;
+		return ghostManager.getGhosts();
+	}
+	
+	public List<StaticEntity> getStaticEntities()
+	{
+		return staticEntityManager.getEntities();
 	}
 	
 }

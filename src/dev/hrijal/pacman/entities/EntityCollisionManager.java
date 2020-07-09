@@ -93,11 +93,12 @@ public class EntityCollisionManager implements Subject
 		
 		if(collisionIndex != -1)
 		{
-			staticCollisionObject = handler.getWorld().getStaticEntityManager().getEntities().get(collisionIndex);
+			staticCollisionObject = handler.getWorld().getStaticEntities().get(collisionIndex);
 			if(staticCollisionObject instanceof Capsule)
 			{
 				capsuleCount++;
 			}
+			
 			notifyStaticCollisionObservers();
 			staticCollisionObject = null;
 		}
@@ -105,7 +106,7 @@ public class EntityCollisionManager implements Subject
 	
 	public void checkGhostCollisionAndNotify()
 	{	
-		for(Ghost ghost: handler.getWorld().getGhostManager().getGhosts())
+		for(Ghost ghost: handler.getWorld().getGhosts())
 		{
 			if(collisionPlayerAndGhost(ghost) && !(ghost.getState() instanceof DeadState))
 			{
@@ -124,7 +125,7 @@ public class EntityCollisionManager implements Subject
 	{
 		int index = -1, i = 0;
 		
-		for(Entity e: handler.getWorld().getStaticEntityManager().getEntities())
+		for(Entity e: handler.getWorld().getStaticEntities())
 		{
 			if(e.getEntityCollisionBounds(0f, 0f).intersects(player.getEntityCollisionBounds(xOffset, yOffset)))
 			{

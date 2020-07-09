@@ -1,4 +1,4 @@
-package dev.hrijal.pacman;
+package dev.hrijal.pacman.entities.creatures.player.score;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.entities.GhostCollisionObserver;
 import dev.hrijal.pacman.entities.StaticCollisionObserver;
@@ -30,9 +31,8 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 	private List<List<Integer>> ghostCollisionCoordinates;
 
 	//TIMER
-	public static final long SCORE_DISPLAY_DURATION = 1000;
-	private long timer;
-	private long lastTime;
+	public static final long SCORE_DISPLAY_DURATION = 500;
+	private Timer scoreDisplayTimer;
 	
 	public ScoreManager(EntityCollisionManager entityCollisionManager)
 	{
@@ -47,8 +47,7 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 		ghostCollisionCoordinates = new ArrayList<>();
 
 		//Timer
-		timer = 0;
-		lastTime = 0;
+		scoreDisplayTimer = new Timer(SCORE_DISPLAY_DURATION);
 		
 		//Register as observer
 		entityCollisionManager.registerGhostCollisionObserver(this);
@@ -64,13 +63,18 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 		
 		if(ghostCollisionCoordinates.size() != 0)
 		{
-			incrementTimer();
+			scoreDisplayTimer.readyTimer();
 		}
 		
-		if(timer >= SCORE_DISPLAY_DURATION)
+		if(scoreDisplayTimer.isTimerReady())
+		{
+			scoreDisplayTimer.incrementTimer();
+		}
+		
+		if(scoreDisplayTimer.isTimerExpired())
 		{
 			ghostCollisionCoordinates.clear();
-			resetTimer();
+			scoreDisplayTimer.resetTimer();
 		}
 	}
 	
@@ -120,6 +124,7 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 						ghostPointsIndex = 0;
 						capsuleCount = entityCollisionManager.getCapsuleCount();
 					}
+					
 					currScore += ghostPoints.get(ghostPointsIndex);
 					ghostCollisionCoordinates.add(Arrays.asList(ghost.getEntityCollisionBounds(0f,0f).x, 
 																ghost.getEntityCollisionBounds(0f,0f).y));
@@ -127,22 +132,14 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 				}
 			}
 		}
-		
 	}
 	
-	public void incrementTimer()
+	
+	//GETTERS AND SETTERS
+	
+	public long getTimer()
 	{
-		if(lastTime == 0)
-			lastTime = System.currentTimeMillis();
-		
-		timer += System.currentTimeMillis() - lastTime;
-		lastTime = System.currentTimeMillis();
+		return scoreDisplayTimer.getTimer();
 	}
-	
-	public void resetTimer()
-	{
-		timer = 0;
-		lastTime = 0;
-	}
-	
+
 }

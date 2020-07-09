@@ -132,6 +132,7 @@ public class GhostManager implements GhostCollisionObserver, StaticCollisionObse
 		}
 	}
 	
+	
 	//GETTERS AND SETTERS
 	
 	public List<Ghost> getGhosts()

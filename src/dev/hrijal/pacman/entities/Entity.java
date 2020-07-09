@@ -34,6 +34,11 @@ public abstract class Entity
 	
 	//GETTERS AND SETTERS
 	
+	public Handler getHandler()
+	{
+		return handler;
+	}
+	
 	public float getX() 
 	{
 		return x;

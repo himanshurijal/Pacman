@@ -111,6 +111,7 @@ public class Game implements Runnable
 		}
 	}
 	
+	@Override
 	public void run()
 	{
 		init();
@@ -145,7 +146,7 @@ public class Game implements Runnable
 			
 			if(timer >= 1000000000)
 			{
-//				System.out.println("Frames per second:"+fpsCounter);
+				System.out.println("Frames per second:"+fpsCounter);
 				fpsCounter = 0;
 				timer = 0;
 			}
@@ -160,6 +161,7 @@ public class Game implements Runnable
 		{
 			return;
 		}
+		
 		isRunning = true;
 		
 		thread = new Thread(this);
@@ -172,6 +174,7 @@ public class Game implements Runnable
 		{
 			return;
 		}
+		
 		isRunning = false;
 		
 		try 

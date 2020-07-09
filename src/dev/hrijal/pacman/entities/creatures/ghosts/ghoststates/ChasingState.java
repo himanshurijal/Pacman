@@ -3,6 +3,7 @@ package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
 import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
+import dev.hrijal.pacman.tiles.Tile;
 
 public class ChasingState extends GhostState
 {
@@ -18,17 +19,33 @@ public class ChasingState extends GhostState
 	}
 	
 	@Override
-	public void checkTimer()
+	public void checkTransitionToNextState()
 	{
 		if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
 		{
-			incrementTimer();
+//			incrementTimer();
+//			
+//			if(timer >= duration)
+//			{
+//				switchedStateCount++;
+//				resetTimer();
+//				ghost.setState(ghost.getScatteredState());
+//			}
 			
-			if(timer >= duration)
+			if(currStateTimer.isTimerReady())
 			{
-				switchedStateCount++;
-				resetTimer();
-				ghost.setState(ghost.getScatteredState());
+				currStateTimer.incrementTimer();
+				
+				if(currStateTimer.isTimerExpired())
+				{
+					switchedStateCount++;
+					currStateTimer.resetTimer();
+					ghost.setState(ghost.getScatteredState());
+				}
+			}
+			else
+			{
+				currStateTimer.readyTimer();
 			}
 		}
 		else
@@ -40,7 +57,17 @@ public class ChasingState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-		ghost.chase();
+//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
+//		
+//		if(pauseTimer == 0)
+//		{
+//			ghost.chase();
+//		}
+		
+		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
+		{
+			ghost.chase();
+		}
 	}
 	
 	@Override

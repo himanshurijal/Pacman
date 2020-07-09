@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadRunHome;
+import dev.hrijal.pacman.gfx.Assets;
 
 public class DeadState extends GhostState
 {
@@ -17,8 +18,25 @@ public class DeadState extends GhostState
 	}
 	
 	@Override
-	public void checkTimer()
+	public void checkTransitionToNextState()
 	{
+//		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
+//		{			
+//			ghost.getLastState().setTimer(ghost.getLastStateTimer());
+//			ghost.getLastState().setLastTime(System.currentTimeMillis());
+//			ghost.setState(ghost.getLastState());
+//		}
+		
+		if(movementPauseTimer.isTimerReady())
+		{
+			movementPauseTimer.incrementTimer();
+			
+			if(movementPauseTimer.isTimerExpired())
+			{
+				movementPauseTimer.resetTimer();
+			}
+		}
+		
 		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
 		{			
 			ghost.getLastState().setTimer(ghost.getLastStateTimer());
@@ -30,13 +48,35 @@ public class DeadState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-		ghost.runToHome();
+//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
+//		
+//		if(pauseTimer == 0)
+//		{
+//			ghost.runToHome();
+//		}
+		
+		
+		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
+		{
+			ghost.runToHome();
+		}
 	}
 	
 	@Override
 	public BufferedImage getCurrentFrame() 
 	{
-		if(ghost.getxMove() > 0)
+//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
+//		
+//		if(pauseTimer != 0)
+//		{
+//			return Assets.empty;
+//		}
+		
+		if(movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
+		{
+			return Assets.empty;
+		}
+		else if(ghost.getxMove() > 0)
 		{
 			return movement[0];
 		}
@@ -57,15 +97,9 @@ public class DeadState extends GhostState
 			return movement[0];
 		}
 	}
-	
+
 	@Override
-	public void ghostCollisionWithPlayer()
-	{
-		//Do nothing
-	}
-	
-	@Override
-	public void playerCollisionWithCapsule() //Overridden in AtHomeState
+	public void playerCollisionWithCapsule()
 	{
 		//Do nothing
 	}
