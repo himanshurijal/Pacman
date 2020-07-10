@@ -10,20 +10,17 @@ public abstract class GhostState
 {
 	
 	protected Ghost ghost;
-//	protected long duration; //Duration after which ghosts will transition to next state
-//	protected long timer;
-//	protected long lastTime;
-	
-	protected Timer currStateTimer;
-	protected static Timer movementPauseTimer;
+
+	//TIMERS
+	protected Timer currStateTimer; //This timer will determine how long ghosts will stay in their current state
+	protected static Timer movementPauseTimer; //This timer will determine how long ghosts will pause their movement.
+											   //It will only start if a ghosts is "eaten" in FrightenedState.
 	
 	public GhostState(Ghost ghost, long duration)
 	{
 		this.ghost = ghost;
-//		this.duration = duration;
-//		timer =  0;
-//		lastTime = 0;
-		
+
+		//Timers
 		currStateTimer = new Timer(duration);
 		movementPauseTimer = new Timer(ScoreManager.SCORE_DISPLAY_DURATION);
 	}
@@ -37,10 +34,8 @@ public abstract class GhostState
 	public void playerCollisionWithCapsule() //Overridden in FrightenedState and DeadState
 	{
 		ghost.setLastState(ghost.getState());
-//		ghost.setLastStateTimer(timer);
 		ghost.setLastStateTimer(currStateTimer.getTimer());
 
-//		resetTimer();
 		currStateTimer.resetTimer();
 		
 		ghost.setState(ghost.getFrightenedState());
@@ -50,40 +45,22 @@ public abstract class GhostState
 	{
 		//Do nothing
 	}
-//	
-//	public void incrementTimer()
-//	{
-//		if(lastTime == 0)
-//			lastTime = System.currentTimeMillis();
-//		
-//		timer += System.currentTimeMillis() - lastTime;
-//		lastTime = System.currentTimeMillis();
-//	}
-//	
-//	public void resetTimer()
-//	{
-//		timer = 0;
-//		lastTime = 0;
-//	}
 	
 	
 	//GETTERS AND SETTERS
 	
 	public void setDuration(long duration)
 	{
-//		this.duration = duration;
 		currStateTimer.setDuration(duration);
 	}
 
 	public void setTimer(long timer)
 	{
-//		this.timer = timer;
 		currStateTimer.setTimer(timer);
 	}
 
 	public void setLastTime(long lastTime)
 	{
-//		this.lastTime = lastTime;
 		currStateTimer.setLastTime(lastTime);
 	}
 	

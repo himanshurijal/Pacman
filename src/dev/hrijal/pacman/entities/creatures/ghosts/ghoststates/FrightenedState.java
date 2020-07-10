@@ -22,19 +22,6 @@ public class FrightenedState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{
-//		incrementTimer();
-//		
-//		if(timer >= duration)
-//		{
-//			resetTimer();
-//			
-//			adjustGhostXY(); 
-//			
-//			ghost.getLastState().setTimer(ghost.getLastStateTimer());
-//			ghost.getLastState().setLastTime(System.currentTimeMillis());
-//			ghost.setState(ghost.getLastState());
-//		}
-		
 		if(currStateTimer.isTimerReady())
 		{
 			currStateTimer.incrementTimer();
@@ -59,13 +46,6 @@ public class FrightenedState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
-//		
-//		if(pauseTimer == 0)
-//		{
-//			ghost.runAway();
-//		}
-		
 		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
 		{
 			ghost.runAway();
@@ -75,16 +55,6 @@ public class FrightenedState extends GhostState
 	@Override
 	public BufferedImage getCurrentFrame()
 	{
-//		if(timer < duration - Ghost.FLASHING_DURATION) 
-//		{
-//			return movement;
-//		}
-//		else //Run the flashing animation 2 seconds before the ghost is about to exit frightened mode
-//		{  
-//			animFlashing.tick();
-//			return animFlashing.getCurrentFrame();
-//		}
-		
 		if(currStateTimer.getTimer() < currStateTimer.getDuration() - Ghost.FLASHING_DURATION) 
 		{
 			return movement;
@@ -99,7 +69,6 @@ public class FrightenedState extends GhostState
 	@Override
 	public void playerCollisionWithCapsule()
 	{
-//		resetTimer();
 		currStateTimer.resetTimer();
 		ghost.setState(ghost.getFrightenedState());
 	}
@@ -107,7 +76,6 @@ public class FrightenedState extends GhostState
 	@Override
 	public void ghostCollisionWithPlayer()
 	{
-//		resetTimer();
 		currStateTimer.resetTimer();
 		
 		movementPauseTimer.readyTimer();

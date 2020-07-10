@@ -19,24 +19,7 @@ public class DeadState extends GhostState
 	
 	@Override
 	public void checkTransitionToNextState()
-	{
-//		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
-//		{			
-//			ghost.getLastState().setTimer(ghost.getLastStateTimer());
-//			ghost.getLastState().setLastTime(System.currentTimeMillis());
-//			ghost.setState(ghost.getLastState());
-//		}
-		
-		if(movementPauseTimer.isTimerReady())
-		{
-			movementPauseTimer.incrementTimer();
-			
-			if(movementPauseTimer.isTimerExpired())
-			{
-				movementPauseTimer.resetTimer();
-			}
-		}
-		
+	{		
 		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
 		{			
 			ghost.getLastState().setTimer(ghost.getLastStateTimer());
@@ -48,13 +31,15 @@ public class DeadState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
-//		
-//		if(pauseTimer == 0)
-//		{
-//			ghost.runToHome();
-//		}
-		
+		if(movementPauseTimer.isTimerReady())
+		{
+			movementPauseTimer.incrementTimer();
+			
+			if(movementPauseTimer.isTimerExpired())
+			{
+				movementPauseTimer.resetTimer();
+			}
+		}
 		
 		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
 		{
@@ -65,14 +50,7 @@ public class DeadState extends GhostState
 	@Override
 	public BufferedImage getCurrentFrame() 
 	{
-//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
-//		
-//		if(pauseTimer != 0)
-//		{
-//			return Assets.empty;
-//		}
-		
-		if(movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
+		if(movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't started yet
 		{
 			return Assets.empty;
 		}

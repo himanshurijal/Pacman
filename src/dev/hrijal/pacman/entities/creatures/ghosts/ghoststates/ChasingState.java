@@ -23,15 +23,6 @@ public class ChasingState extends GhostState
 	{
 		if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
 		{
-//			incrementTimer();
-//			
-//			if(timer >= duration)
-//			{
-//				switchedStateCount++;
-//				resetTimer();
-//				ghost.setState(ghost.getScatteredState());
-//			}
-			
 			if(currStateTimer.isTimerReady())
 			{
 				currStateTimer.incrementTimer();
@@ -57,13 +48,6 @@ public class ChasingState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
-//		
-//		if(pauseTimer == 0)
-//		{
-//			ghost.chase();
-//		}
-		
 		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
 		{
 			ghost.chase();

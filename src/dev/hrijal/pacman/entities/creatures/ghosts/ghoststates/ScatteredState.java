@@ -3,7 +3,6 @@ package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
 import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.tiles.Tile;
 
 public class ScatteredState extends GhostState
 {
@@ -19,14 +18,6 @@ public class ScatteredState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{
-//		incrementTimer();
-//		
-//		if(timer >= duration)
-//		{
-//			resetTimer();
-//			ghost.setState(ghost.getChasingState());
-//		}
-		
 		if(currStateTimer.isTimerReady())
 		{
 			currStateTimer.incrementTimer();
@@ -46,13 +37,6 @@ public class ScatteredState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-//		long pauseTimer = ghost.getHandler().getWorld().getScoreManager().getTimer();
-//		
-//		if(pauseTimer == 0)
-//		{
-//			ghost.scatter();
-//		}
-		
 		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
 		{
 			ghost.scatter();
