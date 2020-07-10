@@ -32,7 +32,73 @@ public abstract class Creature extends Entity
 		return handler.getWorld().getTile(y, x).isSolid();
 	}
 	
-	public void moveX()
+	public boolean isXMoveValid(float xMove)
+	{
+		boolean check = false;
+		int tupY = (int) (y + mazeCollisionBounds.y) / Tile.TILEHEIGHT;
+		int tlowY = (int) ((y + mazeCollisionBounds.y + mazeCollisionBounds.height) / Tile.TILEHEIGHT);
+		int tX; 
+		
+		if(xMove > 0) //Move Right
+		{
+			tX = (int) (x + mazeCollisionBounds.x + mazeCollisionBounds.width + xMove) / Tile.TILEWIDTH;
+			
+			if(!isCollisionWithTile(tX,tupY) && !isCollisionWithTile(tX,tlowY) )
+			{
+				check = true;
+			}
+		}
+		else if(xMove < 0)//Move Left
+		{
+			tX = (int) (x + mazeCollisionBounds.x + xMove) / Tile.TILEWIDTH;
+			
+			if(!isCollisionWithTile(tX,tupY) && !isCollisionWithTile(tX,tlowY) )
+			{
+				check = true;
+			}
+		}
+		else
+		{
+			check = true;
+		}
+		
+		return check;
+	}
+	
+	public boolean isYMoveValid(float yMove)
+	{
+		boolean check = false;
+		int trightX = (int) (x + mazeCollisionBounds.x + mazeCollisionBounds.width) / Tile.TILEWIDTH;
+		int tleftX = (int) (x + mazeCollisionBounds.x) / Tile.TILEWIDTH;
+		int tY;
+		
+		if(yMove > 0) //Move Down
+		{
+			tY = (int) (y + mazeCollisionBounds.y + mazeCollisionBounds.height + yMove) / Tile.TILEHEIGHT;
+			
+			if(!isCollisionWithTile(trightX,tY) && !isCollisionWithTile(tleftX,tY) )
+			{
+				check = true;
+			}
+		}
+		else if(yMove < 0)//Move Up
+		{
+			tY = (int) (y + mazeCollisionBounds.y + yMove) / Tile.TILEHEIGHT;
+			
+			if(!isCollisionWithTile(trightX,tY) && !isCollisionWithTile(tleftX,tY) )
+			{
+				check = true;
+			}
+		}
+		else
+		{
+			check = true;
+		}
+		
+		return check;
+	}
+	
+	public void moveX(float xMove)
 	{
 		int tupY = (int) (y + mazeCollisionBounds.y) / Tile.TILEHEIGHT;
 		int tlowY = (int) ((y + mazeCollisionBounds.y + mazeCollisionBounds.height) / Tile.TILEHEIGHT);
@@ -67,7 +133,7 @@ public abstract class Creature extends Entity
 
 	}
 	
-	public void moveY()
+	public void moveY(float yMove)
 	{
 		//We need trightX and tleftX to ensure that our player cannot move in between solid block
 		int trightX = (int) (x + mazeCollisionBounds.x + mazeCollisionBounds.width) / Tile.TILEWIDTH;

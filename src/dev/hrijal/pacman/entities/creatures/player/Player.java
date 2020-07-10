@@ -1,6 +1,5 @@
 package dev.hrijal.pacman.entities.creatures.player;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -11,10 +10,14 @@ import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.input.KeyManager;
 
-public class Player extends Creature //TODO: Try to implement Facade Pattern and the principle of least knowledge
+public class Player extends Creature 
 {	
 	
 	private boolean isDead;
+	
+	//MOVEMENT
+	private float lastXMove; 
+	private float lastYMove;
 	
 	//ANIMATION
 	private Animation animUp;
@@ -39,7 +42,10 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 		entityCollisionBounds.y = Entity.ENTITY_HEIGHT / 2 - 5;
 		entityCollisionBounds.width = 10;
 		entityCollisionBounds.height = 10;
-		
+
+		lastXMove = -speed;
+		lastYMove = 0;
+				
 		//Animation
 		animUp = new Animation(Assets.playerUp, 100);
 		animDown = new Animation(Assets.playerDown, 100);
@@ -50,7 +56,11 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 	
 	public void tick()
 	{
-		if(!isDead)
+		if(isDead)
+		{
+			animDead.tick();
+		}
+		else
 		{
 			animUp.tick();
 			animDown.tick();
@@ -58,24 +68,14 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 			animRight.tick();
 			
 			getInput();
-			moveX(); 
-			moveY();
-		}
-		else
-		{
-			animDead.tick();
+			moveX(lastXMove); 
+			moveY(lastYMove);
 		}
 	}
 	
 	public void render(Graphics g)
 	{		
 		g.drawImage(getCurrentAnimationFrame(), (int) x, (int) y, Entity.ENTITY_WIDTH, Entity.ENTITY_HEIGHT, null);
-//		
-//		g.setColor(Color.white);
-//		g.drawRect((int) (mazeCollisionBounds.x + x), (int) (mazeCollisionBounds.y + y), 
-//				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
-//		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
-//													 entityCollisionBounds.width, entityCollisionBounds.height);
 	}	
 	
 	public void getInput()
@@ -88,46 +88,72 @@ public class Player extends Creature //TODO: Try to implement Facade Pattern and
 		if(key.up)
 		{
 			yMove = -speed;
+			
+			if(isXMoveValid(xMove) && isYMoveValid(yMove))
+			{
+				lastXMove = xMove;
+				lastYMove = yMove;
+			}
 		}
 		else if(key.down)
 		{
 			yMove = speed;
+			
+			if(isXMoveValid(xMove) && isYMoveValid(yMove))
+			{
+				lastXMove = xMove;
+				lastYMove = yMove;
+			}
 		}
 		else if(key.left)
 		{
 			xMove = -speed;
+			
+			if(isXMoveValid(xMove) && isYMoveValid(yMove))
+			{
+				lastXMove = xMove;
+				lastYMove = yMove;
+			}
 		}
+		
 		else if(key.right) 
 		{
 			xMove = speed;
+			
+			if(isXMoveValid(xMove) && isYMoveValid(yMove))
+			{
+				lastXMove = xMove;
+				lastYMove = yMove;
+			}
 		}
 	}
-
+	
 	public BufferedImage getCurrentAnimationFrame()
 	{
 		if(isDead)
 		{
 			return animDead.getCurrentFrame();
 		}
-		else if(xMove > 0)
+		else if(lastXMove > 0)
 		{
 			return animRight.getCurrentFrame();
 		}
-		else if(xMove < 0 )
+		else if(lastXMove < 0 )
 		{
 			return animLeft.getCurrentFrame();
 		}
-		else if(yMove > 0)
+		else if(lastYMove > 0)
 		{
 			return animDown.getCurrentFrame();
 		}
-		else if (yMove < 0)
+		else if (lastYMove < 0)
 		{
 			return animUp.getCurrentFrame();
 		}
 		else
 		{
-			return Assets.pacman;
+//			return Assets.pacman;
+			return Assets.playerLeft[0];
 		}
 	}
 	

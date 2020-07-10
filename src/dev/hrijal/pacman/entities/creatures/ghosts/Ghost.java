@@ -37,7 +37,7 @@ public class Ghost extends Creature
 	
 	private GhostState currState;
 	
-	private GhostState lastState;	//Needed for storing the last active state in case ghosts go into frightened state
+	private GhostState lastState;	//Needed for storing the last active state in case ghosts go into frightened state.
 	private long lastStateTimer;	//Once ghosts exit frightened state their state will be restored to the last state
 	private long lastStateLastTime; //they were in.
 	
@@ -105,7 +105,7 @@ public class Ghost extends Creature
 //				   									 (int) mazeCollisionBounds.height, (int) mazeCollisionBounds.width);
 //		g.drawRect((int) x + entityCollisionBounds.x, (int) y + entityCollisionBounds.y,
 //													 entityCollisionBounds.width, entityCollisionBounds.height);
-		chaseBehavior.render(g);
+//		chaseBehavior.render(g);
 	}
 	
 	public void makeNextMove(float destX, float destY, float tempSpeed) //Simpler implementation of A* algorithm
@@ -171,7 +171,6 @@ public class Ghost extends Creature
 		
 		if(adjNodeValues.size() > 0)
 		{
-
 			lastAdjNode[0] = x;
 			lastAdjNode[1] = y;
 			
@@ -181,72 +180,6 @@ public class Ghost extends Creature
 			x += xMove;
 			y += yMove;
 		}
-	}
-	
-	public boolean isXMoveValid(float xMove)
-	{
-		boolean check = false;
-		int tupY = (int) (y + mazeCollisionBounds.y) / Tile.TILEHEIGHT;
-		int tlowY = (int) ((y + mazeCollisionBounds.y + mazeCollisionBounds.height) / Tile.TILEHEIGHT);
-		int tX; 
-		
-		if(xMove > 0) //Move Right
-		{
-			tX = (int) (x + mazeCollisionBounds.x + mazeCollisionBounds.width + xMove) / Tile.TILEWIDTH;
-			
-			if(!isCollisionWithTile(tX,tupY) && !isCollisionWithTile(tX,tlowY) )
-			{
-				check = true;
-			}
-		}
-		else if(xMove < 0)//Move Left
-		{
-			tX = (int) (x + mazeCollisionBounds.x + xMove) / Tile.TILEWIDTH;
-			
-			if(!isCollisionWithTile(tX,tupY) && !isCollisionWithTile(tX,tlowY) )
-			{
-				check = true;
-			}
-		}
-		else
-		{
-			check = true;
-		}
-		
-		return check;
-	}
-	
-	public boolean isYMoveValid(float yMove)
-	{
-		boolean check = false;
-		int trightX = (int) (x + mazeCollisionBounds.x + mazeCollisionBounds.width) / Tile.TILEWIDTH;
-		int tleftX = (int) (x + mazeCollisionBounds.x) / Tile.TILEWIDTH;
-		int tY;
-		
-		if(yMove > 0) //Move Down
-		{
-			tY = (int) (y + mazeCollisionBounds.y + mazeCollisionBounds.height + yMove) / Tile.TILEHEIGHT;
-			
-			if(!isCollisionWithTile(trightX,tY) && !isCollisionWithTile(tleftX,tY) )
-			{
-				check = true;
-			}
-		}
-		else if(yMove < 0)//Move Up
-		{
-			tY = (int) (y + mazeCollisionBounds.y + yMove) / Tile.TILEHEIGHT;
-			
-			if(!isCollisionWithTile(trightX,tY) && !isCollisionWithTile(tleftX,tY) )
-			{
-				check = true;
-			}
-		}
-		else
-		{
-			check = true;
-		}
-		
-		return check;
 	}
 	
 	@Override

@@ -24,7 +24,7 @@ public class PlayerManager implements GhostCollisionObserver
 	private int spawnY;
 	
 	//TIMER
-	private static final long PLAYER_DEAD_DURATION = 100;
+	private static final long PLAYER_DEAD_DURATION = 1200;
 	private Timer playerDeadTimer;
 	private Timer movementPauseTimer;
 	
@@ -69,6 +69,11 @@ public class PlayerManager implements GhostCollisionObserver
 		}
 		else if(playerDeadTimer.isTimerReady())
 		{
+			if(players.size() > 0)
+			{
+				currPlayer.tick();
+			}
+			
 			playerDeadTimer.incrementTimer();
 			
 			if(playerDeadTimer.isTimerExpired())
