@@ -1,5 +1,7 @@
 package dev.hrijal.pacman.worlds;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +153,13 @@ public class World
 			{
 				getTile(x,y).render(g, y * Tile.TILEWIDTH, x * Tile.TILEHEIGHT);
 			}
+		}
+		
+		if(gameStartTimer.isTimerReady() && !gameStartTimer.isTimerExpired())
+		{
+			g.setColor(Color.YELLOW);
+			g.setFont(new Font("SansSerif", Font.BOLD, 27));
+			g.drawString("Ready!", Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 14 - 5);
 		}
 		
 		staticEntityManager.render(g);
