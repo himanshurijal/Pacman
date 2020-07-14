@@ -29,7 +29,7 @@ import dev.hrijal.pacman.tiles.Tile;
 public class GhostManager implements GhostCollisionObserver, StaticCollisionObserver
 {
 	
-	private List<Ghost> ghosts; //Remeber to change access
+	private List<Ghost> ghosts;
 	public static final float GHOST_RED_SPAWN_X = Tile.TILEWIDTH * 11,
 							  GHOST_RED_SPAWN_Y = Tile.TILEHEIGHT * 9,
 							  GHOST_PURPLE_SPAWN_X = Tile.TILEWIDTH * 12,

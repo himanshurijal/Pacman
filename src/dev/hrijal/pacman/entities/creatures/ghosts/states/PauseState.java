@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 
@@ -16,23 +16,16 @@ public class PauseState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{	
-		if(currStateTimer.isTimerReady())
-		{
-			currStateTimer.incrementTimer();
-			
-			if(currStateTimer.isTimerExpired())
-			{
-				ghostDead = false;
-									
-				currStateTimer.resetTimer();
-			
-				ghost.getStateAfterPause().setLastTime(System.currentTimeMillis());
-				ghost.setState(ghost.getStateAfterPause());
-			}
-		}
-		else
-		{
-			currStateTimer.readyTimer();
+		currStateTimer.incrementTimer();
+		
+		if(currStateTimer.isTimerExpired())
+		{			
+			ghostDead = false;
+								
+			currStateTimer.resetTimer();
+		
+			ghost.getStateAfterPause().setLastTime(System.currentTimeMillis());
+			ghost.setState(ghost.getStateAfterPause());
 		}
 	}
 

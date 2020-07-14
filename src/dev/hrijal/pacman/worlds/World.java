@@ -9,12 +9,8 @@ import java.util.List;
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
-import dev.hrijal.pacman.entities.GhostCollisionObserver;
-import dev.hrijal.pacman.entities.StaticCollisionObserver;
-import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.GhostManager;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.GhostState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.creatures.player.PlayerManager;
 import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
@@ -25,7 +21,7 @@ import dev.hrijal.pacman.entities.statics.StaticEntityManager;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.utils.FileParserUtil;
 
-public class World implements GhostCollisionObserver, StaticCollisionObserver
+public class World
 {
 	
 	//ENVIRONMENT
@@ -54,7 +50,7 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 
 	//WORLD STATES
 	private boolean playerDead = false;
-	private boolean gameWinner = false;
+	private boolean gameWon = false;
 	private boolean gameOver = false;
 	
 	public World(String path, Handler handler)
@@ -106,8 +102,8 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 		gameStartTimer = new Timer(GAME_START_DURATION);
 		
 		//Register as observer
-		entityCollisionManager.registerGhostCollisionObserver(this);
-		entityCollisionManager.registerStaticCollisionObserver(this);
+//		entityCollisionManager.registerGhostCollisionObserver(this);
+//		entityCollisionManager.registerStaticCollisionObserver(this);
 	}
 
 	public void loadWorld(String path)
@@ -134,38 +130,48 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 	
 	public void tick()
 	{		
+//		System.out.println("World tick!");
+//		
 		if(getPlayers().size() == 0)
 		{
-			gameOver  = true;
+			gameOver = true;
 		}
 		
-		if(playerDead && !GhostState.isPlayerDead())
+		if(getStaticEntities().size() == 0)
+		{
+			gameWon = true;
+		}
+		
+		if(getPlayer().isDead())
+		{
+			playerDead = true;
+		}
+		
+		if(playerDead && !getPlayer().isDead())
 		{
 			gameStartTimer.resetTimer();
 			playerDead = false;
-		}
-		
-		if(!gameStartTimer.isTimerReady())
+		}	
+
+		if(gameStartTimer.isTimerExpired())
 		{
-			gameStartTimer.readyTimer();
+			if(!gameWon && !gameOver) 
+			{
+				staticEntityManager.tick();
+				
+				playerManager.tick();
+				
+				ghostManager.tick();
+				
+				entityCollisionManager.checkStaticCollisionAndNotify();
+				entityCollisionManager.checkGhostCollisionAndNotify();
+				
+				scoreManager.tick();
+			}
 		}
 		else
 		{
 			gameStartTimer.incrementTimer();
-		}
-		
-		if(gameStartTimer.isTimerExpired() && !gameWinner && !gameOver) 
-		{
-			staticEntityManager.tick();
-			
-			playerManager.tick();
-			
-			ghostManager.tick();
-			
-			entityCollisionManager.checkStaticCollisionAndNotify();
-			entityCollisionManager.checkGhostCollisionAndNotify();
-			
-			scoreManager.tick();
 		}
 	}
 	
@@ -179,7 +185,7 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 			}
 		}
 		
-		if(gameWinner)
+		if(gameWon)
 		{
 			g.setColor(Color.GREEN);
 			g.setFont(new Font("SansSerif", Font.BOLD, 27));
@@ -193,7 +199,7 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 		}
 		else
 		{
-			if(gameStartTimer.isTimerReady() && !gameStartTimer.isTimerExpired())
+			if(!gameStartTimer.isTimerExpired())
 			{
 				g.setColor(Color.YELLOW);
 				g.setFont(new Font("SansSerif", Font.BOLD, 27));
@@ -238,28 +244,29 @@ public class World implements GhostCollisionObserver, StaticCollisionObserver
 	}
 	
 
-	@Override
-	public void updateOnStaticCollision(Subject subject) 
-	{
-		if(getStaticEntities().size() == 0)
-		{
-			gameWinner = true;
-		}
-	}
-
-	@Override
-	public void updateOnGhostCollision(Subject subject) 
-	{
-		if(GhostState.isPlayerDead())
-		{
-			playerDead = true;
-		}
-		
-		if(getPlayers().size() == 0)
-		{
-			gameOver  = true;
-		}
-	}
+//	@Override
+//	public void updateOnStaticCollision(Subject subject) 
+//	{
+//		if(getStaticEntities().size() == 0)
+//		{
+//			gameWon = true;
+//		}
+//	}
+//
+//	@Override
+//	public void updateOnGhostCollision(Subject subject) 
+//	{
+//		if(GhostState.isPlayerDead())
+//		{
+//			playerDead = true;
+//		}
+//		
+//		if(getPlayers().size() == 0)
+//		{
+//			gameOver  = true;
+//		}
+//	}
+	
 	
 	//GETTERS AND SETTERS
 

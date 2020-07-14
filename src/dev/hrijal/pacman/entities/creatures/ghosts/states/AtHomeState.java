@@ -1,26 +1,24 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class ChasingState extends GhostState
+public class AtHomeState extends GhostState
 {
 	
 	private BufferedImage[] movement;
-	private int switchedStateCount;
 	
-	public ChasingState(Ghost ghost, long duration, BufferedImage[] movementAssets)
+	public AtHomeState(Ghost ghost, long duration, BufferedImage[] movementAssets)
 	{
 		super(ghost, duration);
 		movement = movementAssets;
-		switchedStateCount = 0;
 	}
-	
+
 	@Override
 	public void checkTransitionToNextState()
-	{
+	{	
 		if(ghostDead)
 		{
 			ghost.setStateAfterPause(ghost.getState());
@@ -33,35 +31,21 @@ public class ChasingState extends GhostState
 		}
 		else
 		{
-			if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
+			currStateTimer.incrementTimer();
+			
+			if(currStateTimer.isTimerExpired())
 			{
-				if(currStateTimer.isTimerReady())
-				{
-					currStateTimer.incrementTimer();
-					
-					if(currStateTimer.isTimerExpired())
-					{
-						switchedStateCount++;
-						currStateTimer.resetTimer();
-						ghost.setState(ghost.getScatteredState());
-					}
-				}
-				else
-				{
-					currStateTimer.readyTimer();
-				}
-			}
-			else
-			{
-				//Once state has been switched to scattered state for four times remain in chasing state indefinitely
+				currStateTimer.resetTimer();
+				ghost.setState(ghost.getScatteredState());
 			}
 		}
 	}
-	
+
 	@Override
 	public void makeNextMove()
-	{
-		ghost.chase();
+	{	
+//		System.out.println("Here now!");
+		ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
 	}
 	
 	@Override
@@ -88,5 +72,5 @@ public class ChasingState extends GhostState
 			return movement[0];
 		}
 	}
-	
+
 }

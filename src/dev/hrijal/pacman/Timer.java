@@ -3,7 +3,6 @@ package dev.hrijal.pacman;
 public class Timer implements Runnable
 {
 	//TODO: Use threads to make it so that the caller doesn't need to increment timer themselves
-	private boolean timerReady; //Flag to check if timer is ready to be incremented by the called
 	
 	private long duration;
 	private long timer;
@@ -11,55 +10,29 @@ public class Timer implements Runnable
 	
 	public Timer(long duration)
 	{
-		timerReady = false;
-		
 		this.duration = duration;
 		timer = 0;
 		lastTime = 0;
 	}
-	
-	public synchronized void readyTimer()
-	{		
-		if(timerReady)
-		{
-			return;
-		}
-		
-		timerReady = true;
-	}
 
 	public void incrementTimer()
 	{
-		if(timerReady)
-		{
-			if(lastTime == 0)
-				lastTime = System.currentTimeMillis();
-			
-			timer += System.currentTimeMillis() - lastTime;
+		if(lastTime == 0)
 			lastTime = System.currentTimeMillis();
-		}
-		else
-		{
-			return;
-		}
+		
+		timer += System.currentTimeMillis() - lastTime;
+		lastTime = System.currentTimeMillis();
 	}
 	
-	public synchronized void resetTimer()
+	public void resetTimer()
 	{
-		if(!timerReady)
-		{
-			return;
-		}
-				
-		timerReady = false;
-		
 		timer = 0;
 		lastTime = 0;
 	}
 
 	public boolean isTimerExpired()
 	{
-		if(timerReady && timer >= duration)
+		if(timer >= duration)
 		{
 			return true;
 		}
@@ -72,7 +45,7 @@ public class Timer implements Runnable
 	@Override
 	public void run()
 	{
-		while(timerReady && timer < duration)
+		while(timer < duration)
 		{
 			incrementTimer();
 		}
@@ -80,11 +53,6 @@ public class Timer implements Runnable
 	
 	
 	//GETTERS AND SETTERS
-	
-	public boolean isTimerReady() 
-	{
-		return timerReady;
-	}
 	
 	public long getDuration()
 	{

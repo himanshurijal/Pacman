@@ -11,18 +11,18 @@ import java.util.List;
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.Entity;
 import dev.hrijal.pacman.entities.creatures.Creature;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.AtHomeState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ChasingState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.GhostState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ResetState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.FrightenedBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ScatterBehavior;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.AtHomeState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.ChasingState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.FrightenedState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.GhostState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.PauseState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.ResetState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.ScatteredState;
 import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
 import dev.hrijal.pacman.gfx.Assets;
 
@@ -47,7 +47,7 @@ public class Ghost extends Creature
 	   		  				  CHASING_DURATION = 20000,
 							  FRIGHTENED_DURATION = 8000,  
 					   		  FLASHING_DURATION = 2000,
-					   		  RESET_DURATION = 1200;
+					   		  RESET_DURATION = 1300;
 	
 	//MOVEMENT
 	private float[] lastAdjNode;

@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 

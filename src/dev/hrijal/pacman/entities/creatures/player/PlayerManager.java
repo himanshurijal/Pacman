@@ -10,7 +10,7 @@ import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.entities.GhostCollisionObserver;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.FrightenedState;
 import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
 import dev.hrijal.pacman.tiles.Tile;
 
@@ -20,15 +20,16 @@ public class PlayerManager implements GhostCollisionObserver
 	//PLAYERS
 	private List<Player> players;
 	private Player currPlayer;
-	private int spawnX;
-	private int spawnY;
 	
+	//SPAWN
+	private float afterDeathSpawnX, afterDeathSpawnY;
+
 	//TIMER
-	private static final long PLAYER_DEAD_DURATION = 1200;
+	private static final long PLAYER_DEAD_DURATION = 1300;
 	private Timer playerDeadTimer;
 	private Timer movementPauseTimer;
 	
-	public PlayerManager(Handler handler, int spawnX, int spawnY, EntityCollisionManager entityCollisionManager)
+	public PlayerManager(Handler handler, float spawnX, float spawnY, EntityCollisionManager entityCollisionManager)
 	{		
 		//Players
 		players = new ArrayList<>();
@@ -45,9 +46,9 @@ public class PlayerManager implements GhostCollisionObserver
 		
 		currPlayer  = players.get(0);
 		
-		this.spawnX = spawnX;
-		this.spawnY = spawnY;
-
+		afterDeathSpawnX = spawnX;
+		afterDeathSpawnY = spawnY;
+		
 		//Timer
 		playerDeadTimer = new Timer(PLAYER_DEAD_DURATION);
 		movementPauseTimer = new Timer(ScoreManager.SCORE_DISPLAY_DURATION);
@@ -58,16 +59,17 @@ public class PlayerManager implements GhostCollisionObserver
 	
 	public void tick()
 	{
-		if(movementPauseTimer.isTimerReady())
+		if(currPlayer.isMovementPaused())
 		{
 			movementPauseTimer.incrementTimer();
 			
 			if(movementPauseTimer.isTimerExpired())	
 			{
+				currPlayer.setMovementPaused(false);
 				movementPauseTimer.resetTimer();
 			}
 		}
-		else if(playerDeadTimer.isTimerReady())
+		else if(currPlayer.isDead())
 		{
 			if(players.size() > 0)
 			{
@@ -77,14 +79,16 @@ public class PlayerManager implements GhostCollisionObserver
 			playerDeadTimer.incrementTimer();
 			
 			if(playerDeadTimer.isTimerExpired())
-			{
+			{	
+				System.out.println("Player dead");
+				
 				players.remove(currPlayer);
 				
 				if(players.size() > 0)
 				{
 					currPlayer = players.get(0);
-					currPlayer.setX(spawnX);
-					currPlayer.setY(spawnY);
+					currPlayer.setX(afterDeathSpawnX);
+					currPlayer.setY(afterDeathSpawnY);
 				}
 				
 				playerDeadTimer.resetTimer();
@@ -101,7 +105,7 @@ public class PlayerManager implements GhostCollisionObserver
 	
 	public void render(Graphics g)
 	{
-		if(players.size() > 0 && !movementPauseTimer.isTimerReady())
+		if(players.size() > 0 && (!currPlayer.isMovementPaused() || (currPlayer.isMovementPaused() && currPlayer.isDead())))
 		{
 			currPlayer.render(g);
 		}
@@ -123,13 +127,12 @@ public class PlayerManager implements GhostCollisionObserver
 			{		
 				if((ghost.getState() instanceof FrightenedState))
 				{
-					movementPauseTimer.readyTimer();
+					currPlayer.setMovementPaused(true);
 				}
 				else
 				{
+					currPlayer.setMovementPaused(true);
 					currPlayer.setDead(true);
-					movementPauseTimer.readyTimer();
-					playerDeadTimer.readyTimer();
 				}
 			}
 		}	

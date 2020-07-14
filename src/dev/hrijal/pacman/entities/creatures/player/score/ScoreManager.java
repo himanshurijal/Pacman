@@ -13,9 +13,7 @@ import dev.hrijal.pacman.entities.GhostCollisionObserver;
 import dev.hrijal.pacman.entities.StaticCollisionObserver;
 import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.DeadState;
 import dev.hrijal.pacman.tiles.Tile;
 
 public class ScoreManager implements GhostCollisionObserver, StaticCollisionObserver
@@ -26,8 +24,8 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 	private int highScore;
 	
 	//GHOST POINTS
-	private List<Integer> ghostPoints;
 	private int capsuleCount;
+	private List<Integer> ghostPoints;
 	private int ghostPointsIndex;
 	private List<List<Integer>> ghostCollisionCoordinates;
 
@@ -64,14 +62,9 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 		
 		if(ghostCollisionCoordinates.size() != 0)
 		{
-			scoreDisplayTimer.readyTimer();
-		}
-		
-		if(scoreDisplayTimer.isTimerReady())
-		{
 			scoreDisplayTimer.incrementTimer();
 		}
-		
+
 		if(scoreDisplayTimer.isTimerExpired())
 		{
 			ghostCollisionCoordinates.clear();
@@ -135,12 +128,4 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 		}
 	}
 	
-	
-	//GETTERS AND SETTERS
-	
-	public long getTimer()
-	{
-		return scoreDisplayTimer.getTimer();
-	}
-
 }

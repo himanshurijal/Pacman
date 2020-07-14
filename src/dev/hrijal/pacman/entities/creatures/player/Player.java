@@ -13,7 +13,8 @@ import dev.hrijal.pacman.input.KeyManager;
 public class Player extends Creature 
 {	
 	
-	private boolean isDead;
+	private boolean playerDead;
+	private boolean movementPaused;
 	
 	//MOVEMENT
 	private float lastXMove; 
@@ -30,7 +31,8 @@ public class Player extends Creature
 	{
 		super(handler, x, y);
 
-		isDead = false;
+		playerDead = false;
+		movementPaused = false;
 		
 		//Movement		
 		mazeCollisionBounds.x = 0;
@@ -56,7 +58,7 @@ public class Player extends Creature
 	
 	public void tick()
 	{
-		if(isDead)
+		if(playerDead)
 		{
 			animDead.tick();
 		}
@@ -130,7 +132,7 @@ public class Player extends Creature
 	
 	public BufferedImage getCurrentAnimationFrame()
 	{
-		if(isDead)
+		if(playerDead)
 		{
 			return animDead.getCurrentFrame();
 		}
@@ -152,7 +154,6 @@ public class Player extends Creature
 		}
 		else
 		{
-//			return Assets.pacman;
 			return Assets.playerLeft[0];
 		}
 	}
@@ -162,12 +163,22 @@ public class Player extends Creature
 	
 	public boolean isDead()
 	{
-		return isDead;
+		return playerDead;
 	}
 
 	public void setDead(boolean isDead) 
 	{
-		this.isDead = isDead;
+		this.playerDead = isDead;
+	}
+	
+	public boolean isMovementPaused() 
+	{
+		return movementPaused;
+	}
+
+	public void setMovementPaused(boolean movementPaused) 
+	{
+		this.movementPaused = movementPaused;
 	}
 	
 }

@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 
@@ -7,7 +7,7 @@ import dev.hrijal.pacman.gfx.Assets;
 
 public class ResetState extends GhostState
 {
-
+	
 	public ResetState(Ghost ghost, long duration)
 	{
 		super(ghost, duration);
@@ -15,25 +15,19 @@ public class ResetState extends GhostState
 
 	@Override
 	public void checkTransitionToNextState()
-	{		
-		if(currStateTimer.isTimerReady())
+	{	
+		currStateTimer.incrementTimer();
+		
+		if(currStateTimer.isTimerExpired())
 		{
-			currStateTimer.incrementTimer();
+//			System.out.println("Ghost exited!");
+			playerDead = false;
 			
-			if(currStateTimer.isTimerExpired())
-			{
-				playerDead = false;
-				
-				currStateTimer.resetTimer();
-				
-				ghost.setX(ghost.getSpawnX());
-				ghost.setY(ghost.getSpawnY());
-				ghost.setState(ghost.getAtHomeState());
-			}
-		}
-		else
-		{
-			currStateTimer.readyTimer();
+			currStateTimer.resetTimer();
+			
+			ghost.setX(ghost.getSpawnX());
+			ghost.setY(ghost.getSpawnY());
+			ghost.setState(ghost.getAtHomeState());
 		}
 	}
 
@@ -60,4 +54,5 @@ public class ResetState extends GhostState
 	{
 		//Do nothing
 	}
+	
 }

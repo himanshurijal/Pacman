@@ -1,8 +1,8 @@
 package dev.hrijal.pacman.tiles;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.ScatteredState;
 import dev.hrijal.pacman.gfx.Assets;
 
 public class GateTile extends Tile 

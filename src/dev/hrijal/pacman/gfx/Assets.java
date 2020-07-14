@@ -84,7 +84,7 @@ public class Assets //Game environment
 		playerDown = new BufferedImage[3];
 		playerLeft = new BufferedImage[3];
 		playerUp = new BufferedImage[3];
-		playerDead = new BufferedImage[11];
+		playerDead = new BufferedImage[12];
 		
 		playerRight[0] = creatureSheet.crop(width * 17, height * 0, width, height);
 		playerRight[1] = creatureSheet.crop(width * 17, height * 1, width, height);
@@ -101,18 +101,19 @@ public class Assets //Game environment
 		playerUp[0] = creatureSheet.crop(width * 17, height * 9, width, height);
 		playerUp[1] = creatureSheet.crop(width * 17, height * 10, width, height);
 		playerUp[2] = creatureSheet.crop(width * 17, height * 11, width, height);
-				
-		playerDead[0] = creatureSheet.crop(width * 7, height * 0, width, height);
-		playerDead[1] = creatureSheet.crop(width * 7, height * 1, width, height);
-		playerDead[2] = creatureSheet.crop(width * 7, height * 2, width, height);
-		playerDead[3] = creatureSheet.crop(width * 7, height * 3, width, height);
-		playerDead[4] = creatureSheet.crop(width * 7, height * 4, width, height);
-		playerDead[5] = creatureSheet.crop(width * 7, height * 5, width, height);
-		playerDead[6] = creatureSheet.crop(width * 7, height * 6, width, height);
-		playerDead[7] = creatureSheet.crop(width * 7, height * 7, width, height);
-		playerDead[8] = creatureSheet.crop(width * 7, height * 8, width, height);
-		playerDead[9] = creatureSheet.crop(width * 7, height * 9, width, height);
-		playerDead[10] = creatureSheet.crop(width * 7, height * 10, width, height);
+		
+		playerDead[0] = creatureSheet.crop(width * 17, height * 0, width, height);
+		playerDead[1] = creatureSheet.crop(width * 7, height * 0, width, height);
+		playerDead[2] = creatureSheet.crop(width * 7, height * 1, width, height);
+		playerDead[3] = creatureSheet.crop(width * 7, height * 2, width, height);
+		playerDead[4] = creatureSheet.crop(width * 7, height * 3, width, height);
+		playerDead[5] = creatureSheet.crop(width * 7, height * 4, width, height);
+		playerDead[6] = creatureSheet.crop(width * 7, height * 5, width, height);
+		playerDead[7] = creatureSheet.crop(width * 7, height * 6, width, height);
+		playerDead[8] = creatureSheet.crop(width * 7, height * 7, width, height);
+		playerDead[9] = creatureSheet.crop(width * 7, height * 8, width, height);
+		playerDead[10] = creatureSheet.crop(width * 7, height * 9, width, height);
+		playerDead[11] = creatureSheet.crop(width * 7, height * 10, width, height);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 
@@ -34,23 +34,16 @@ public class FrightenedState extends GhostState
 		}
 		else
 		{
-			if(currStateTimer.isTimerReady())
+			currStateTimer.incrementTimer();
+			
+			if(currStateTimer.isTimerExpired())
 			{
-				currStateTimer.incrementTimer();
+				currStateTimer.resetTimer();
 				
-				if(currStateTimer.isTimerExpired())
-				{
-					currStateTimer.resetTimer();
-					
-					adjustGhostXY(); 
-					
-					ghost.getStateAfterFrightened().setLastTime(System.currentTimeMillis());
-					ghost.setState(ghost.getStateAfterFrightened());
-				}
-			}
-			else
-			{
-				currStateTimer.readyTimer();
+				adjustGhostXY(); 
+				
+				ghost.getStateAfterFrightened().setLastTime(System.currentTimeMillis());
+				ghost.setState(ghost.getStateAfterFrightened());
 			}
 		}
 	}

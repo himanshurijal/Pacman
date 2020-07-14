@@ -1,57 +1,41 @@
-package dev.hrijal.pacman.entities.creatures.ghosts.ghoststates;
+package dev.hrijal.pacman.entities.creatures.ghosts.states;
 
 import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.tiles.Tile;
+import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadRunHome;
 
-public class AtHomeState extends GhostState
+public class DeadState extends GhostState
 {
-	
+
 	private BufferedImage[] movement;
 	
-	public AtHomeState(Ghost ghost, long duration, BufferedImage[] movementAssets)
+	public DeadState(Ghost ghost, long duration, BufferedImage[] movementAssets)
 	{
 		super(ghost, duration);
 		movement = movementAssets;
 	}
-
+	
 	@Override
 	public void checkTransitionToNextState()
-	{	
-		if(ghostDead)
-		{
-			ghost.setStateAfterPause(ghost.getState());
-			ghost.setState(ghost.getPauseState());
-		}
-		else if(playerDead)
+	{		
+		if(playerDead)
 		{
 			ghost.setStateAfterPause(ghost.getResetState());
 			ghost.setState(ghost.getPauseState());
 		}
-		else
-		{
-			if(!currStateTimer.isTimerReady())
-			{
-				currStateTimer.readyTimer();
-			}
-			else
-			{
-				currStateTimer.incrementTimer();
-				
-				if(currStateTimer.isTimerExpired())
-				{
-					currStateTimer.resetTimer();
-					ghost.setState(ghost.getScatteredState());
-				}
-			}
+		
+		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
+		{			
+			ghost.getStateAfterFrightened().setLastTime(System.currentTimeMillis());
+			ghost.setState(ghost.getStateAfterFrightened());
 		}
 	}
-
+	
 	@Override
 	public void makeNextMove()
-	{	
-		ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
+	{
+		ghost.runToHome();
 	}
 	
 	@Override
@@ -79,4 +63,15 @@ public class AtHomeState extends GhostState
 		}
 	}
 
+	@Override
+	public void playerCollisionWithCapsule()
+	{
+		//Do nothing
+	}
+	
+	@Override
+	public void ghostCollisionWithPlayer()
+	{
+		//Do nothing
+	}
 }

@@ -5,9 +5,9 @@ import java.util.List;
 
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
-import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ResetState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.PauseState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.ResetState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
