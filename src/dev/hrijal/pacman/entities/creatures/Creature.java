@@ -9,6 +9,8 @@ import dev.hrijal.pacman.tiles.Tile;
 public abstract class Creature extends Entity
 {
 	
+	public final float spawnX, spawnY;
+
 	public static final float DEFAULT_SPEED = 3.0f;
 	
 	protected float speed;
@@ -19,6 +21,9 @@ public abstract class Creature extends Entity
 	public Creature(Handler handler, float x, float y)
 	{
 		super(handler, x, y);
+		
+		spawnX = x;
+		spawnY = y;
 		
 		this.speed  = DEFAULT_SPEED;
 		this.xMove = 0;
@@ -170,6 +175,17 @@ public abstract class Creature extends Entity
 	
 	
 	//GETTERS AND SETTERS 
+	
+	
+	public float getSpawnX()
+	{
+		return spawnX;
+	}
+
+	public float getSpawnY() 
+	{
+		return spawnY;
+	}
 	
 	public float getSpeed() 
 	{

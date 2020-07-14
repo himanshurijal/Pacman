@@ -22,34 +22,43 @@ public class FrightenedState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{
-		if(currStateTimer.isTimerReady())
+		if(ghostDead)
 		{
-			currStateTimer.incrementTimer();
-			
-			if(currStateTimer.isTimerExpired())
-			{
-				currStateTimer.resetTimer();
-				
-				adjustGhostXY(); 
-				
-				ghost.getLastState().setTimer(ghost.getLastStateTimer());
-				ghost.getLastState().setLastTime(System.currentTimeMillis());
-				ghost.setState(ghost.getLastState());
-			}
+			ghost.setStateAfterPause(ghost.getState());
+			ghost.setState(ghost.getPauseState());
+		}
+		else if(playerDead)
+		{
+			ghost.setStateAfterPause(ghost.getResetState());
+			ghost.setState(ghost.getPauseState());
 		}
 		else
 		{
-			currStateTimer.readyTimer();
+			if(currStateTimer.isTimerReady())
+			{
+				currStateTimer.incrementTimer();
+				
+				if(currStateTimer.isTimerExpired())
+				{
+					currStateTimer.resetTimer();
+					
+					adjustGhostXY(); 
+					
+					ghost.getStateAfterFrightened().setLastTime(System.currentTimeMillis());
+					ghost.setState(ghost.getStateAfterFrightened());
+				}
+			}
+			else
+			{
+				currStateTimer.readyTimer();
+			}
 		}
 	}
 	
 	@Override
 	public void makeNextMove()
 	{
-		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
-		{
-			ghost.runAway();
-		}
+		ghost.runAway();
 	}
 	
 	@Override
@@ -77,12 +86,14 @@ public class FrightenedState extends GhostState
 	public void ghostCollisionWithPlayer()
 	{
 		currStateTimer.resetTimer();
-		
-		movementPauseTimer.readyTimer();
+	
+		ghostDead = true;
 		
 		adjustGhostXY();
 		
-		ghost.setState(ghost.getDeadState());
+		ghost.setStateAfterPause(ghost.getDeadState());
+	
+		ghost.setState(ghost.getPauseState());
 	}
 	
 	public void adjustGhostXY() //We need to adjust ghosts' XY coordinates to the nearest tile coordinates

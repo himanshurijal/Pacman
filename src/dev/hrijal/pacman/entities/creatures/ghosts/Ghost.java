@@ -1,6 +1,5 @@
 package dev.hrijal.pacman.entities.creatures.ghosts;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -17,13 +16,15 @@ import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ChasingState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.GhostState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ResetState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ScatteredState;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ChaseBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.FrightenedBehavior;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.ScatterBehavior;
+import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
 import dev.hrijal.pacman.gfx.Assets;
-import dev.hrijal.pacman.tiles.Tile;
 
 public class Ghost extends Creature
 {
@@ -34,18 +35,19 @@ public class Ghost extends Creature
 	private GhostState chasingState;
 	private GhostState frightenedState;
 	private GhostState deadState;
+	private GhostState pauseState;
+	private GhostState resetState;
 	
 	private GhostState currState;
 	
-	private GhostState lastState;	//Needed for storing the last active state in case ghosts go into frightened state.
-	private long lastStateTimer;	//Once ghosts exit frightened state their state will be restored to the last state
-	private long lastStateLastTime; //they were in.
+	private GhostState stateAfterFrightened; //Needed for storing the next state to transition to once ghosts exit FrightenedState
+	private GhostState stateAfterPause;		 //or PauseState.
 	
 	public static final long  SCATTERED_DURATION = 7000,
 	   		  				  CHASING_DURATION = 20000,
 							  FRIGHTENED_DURATION = 8000,  
 					   		  FLASHING_DURATION = 2000,
-					   		  DEAD_DURATION = 100;
+					   		  RESET_DURATION = 1200;
 	
 	//MOVEMENT
 	private float[] lastAdjNode;
@@ -64,13 +66,14 @@ public class Ghost extends Creature
 		scatteredState = new ScatteredState(this, SCATTERED_DURATION, movementAssets);
 		chasingState = new ChasingState(this, CHASING_DURATION, movementAssets);
 		frightenedState = new FrightenedState(this, FRIGHTENED_DURATION + FLASHING_DURATION, Assets.ghostFlashing);
-		deadState = new DeadState(this, DEAD_DURATION, Assets.ghostEyes);
+		deadState = new DeadState(this, 0, Assets.ghostEyes);
+		pauseState = new PauseState(this, ScoreManager.SCORE_DISPLAY_DURATION);
+		resetState = new ResetState(this, RESET_DURATION);
 		
 		currState = atHomeState;
 		
-		lastState = null;
-		lastStateTimer = 0;
-		lastStateLastTime = 0;
+		stateAfterFrightened = null;
+		stateAfterPause = null;
 		
 		//Movement
 		lastAdjNode = new float[2];
@@ -269,6 +272,16 @@ public class Ghost extends Creature
 	{
 		return deadState;
 	}
+	
+	public GhostState getPauseState()
+	{
+		return pauseState;
+	}
+	
+	public GhostState getResetState()
+	{
+		return resetState;
+	}
 
 	public GhostState getState()
 	{
@@ -280,34 +293,24 @@ public class Ghost extends Creature
 		currState = state;
 	}
 	
-	public GhostState getLastState()
+	public GhostState getStateAfterFrightened()
 	{
-		return lastState;
+		return stateAfterFrightened;
 	}
 	
-	public void setLastState(GhostState lastState)
+	public void setStateAfterFrightened(GhostState state)
 	{
-		this.lastState = lastState;
+		this.stateAfterFrightened = state;
 	}
 	
-	public long getLastStateTimer() 
+	public GhostState getStateAfterPause()
 	{
-		return lastStateTimer;
+		return stateAfterPause;
 	}
-
-	public void setLastStateTimer(long lastStateTimer)
+	
+	public void setStateAfterPause(GhostState state)
 	{
-		this.lastStateTimer = lastStateTimer;
-	}
-
-	public long getLastStateLastTime() 
-	{
-		return lastStateLastTime;
-	}
-
-	public void setLastStateLastTime(long lastStateLastTime)
-	{
-		this.lastStateLastTime = lastStateLastTime;
+		this.stateAfterPause = state;
 	}
 	
 	//MOVEMENT

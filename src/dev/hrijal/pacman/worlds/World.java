@@ -9,8 +9,12 @@ import java.util.List;
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
+import dev.hrijal.pacman.entities.GhostCollisionObserver;
+import dev.hrijal.pacman.entities.StaticCollisionObserver;
+import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.GhostManager;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.GhostState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.creatures.player.PlayerManager;
 import dev.hrijal.pacman.entities.creatures.player.score.ScoreManager;
@@ -21,7 +25,7 @@ import dev.hrijal.pacman.entities.statics.StaticEntityManager;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.utils.FileParserUtil;
 
-public class World 
+public class World implements GhostCollisionObserver, StaticCollisionObserver
 {
 	
 	//ENVIRONMENT
@@ -48,6 +52,11 @@ public class World
 	public static final long GAME_START_DURATION = 3000;
 	private Timer gameStartTimer;
 
+	//WORLD STATES
+	private boolean playerDead = false;
+	private boolean gameWinner = false;
+	private boolean gameOver = false;
+	
 	public World(String path, Handler handler)
 	{	
 		//Environment
@@ -95,6 +104,10 @@ public class World
 		
 		//Timer
 		gameStartTimer = new Timer(GAME_START_DURATION);
+		
+		//Register as observer
+		entityCollisionManager.registerGhostCollisionObserver(this);
+		entityCollisionManager.registerStaticCollisionObserver(this);
 	}
 
 	public void loadWorld(String path)
@@ -120,7 +133,18 @@ public class World
 	}
 	
 	public void tick()
-	{
+	{		
+		if(getPlayers().size() == 0)
+		{
+			gameOver  = true;
+		}
+		
+		if(playerDead && !GhostState.isPlayerDead())
+		{
+			gameStartTimer.resetTimer();
+			playerDead = false;
+		}
+		
 		if(!gameStartTimer.isTimerReady())
 		{
 			gameStartTimer.readyTimer();
@@ -130,7 +154,7 @@ public class World
 			gameStartTimer.incrementTimer();
 		}
 		
-		if(gameStartTimer.isTimerExpired()) 
+		if(gameStartTimer.isTimerExpired() && !gameWinner && !gameOver) 
 		{
 			staticEntityManager.tick();
 			
@@ -155,20 +179,35 @@ public class World
 			}
 		}
 		
-		if(gameStartTimer.isTimerReady() && !gameStartTimer.isTimerExpired())
+		if(gameWinner)
 		{
-			g.setColor(Color.YELLOW);
+			g.setColor(Color.GREEN);
 			g.setFont(new Font("SansSerif", Font.BOLD, 27));
-			g.drawString("Ready!", Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 14 - 5);
+			g.drawString("You Won!", Tile.TILEWIDTH * 9 + 10, Tile.TILEHEIGHT * 14 - 5);
 		}
+		else if(gameOver)
+		{
+			g.setColor(Color.RED);
+			g.setFont(new Font("SansSerif", Font.BOLD, 27));
+			g.drawString("Game Over!", Tile.TILEWIDTH * 9 - 5, Tile.TILEHEIGHT * 14 - 5);
+		}
+		else
+		{
+			if(gameStartTimer.isTimerReady() && !gameStartTimer.isTimerExpired())
+			{
+				g.setColor(Color.YELLOW);
+				g.setFont(new Font("SansSerif", Font.BOLD, 27));
+				g.drawString("Ready!", Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 14 - 5);
+			}
+			
+			staticEntityManager.render(g);
+			
+			playerManager.render(g);
+			
+			ghostManager.render(g);
 		
-		staticEntityManager.render(g);
-		
-		playerManager.render(g);
-		
-		ghostManager.render(g);
-	
-		scoreManager.render(g);
+			scoreManager.render(g);
+		}
 	}
 	
 	public Tile getTile(int x, int y)
@@ -198,6 +237,29 @@ public class World
 		tiles[x][y] = id;
 	}
 	
+
+	@Override
+	public void updateOnStaticCollision(Subject subject) 
+	{
+		if(getStaticEntities().size() == 0)
+		{
+			gameWinner = true;
+		}
+	}
+
+	@Override
+	public void updateOnGhostCollision(Subject subject) 
+	{
+		if(GhostState.isPlayerDead())
+		{
+			playerDead = true;
+		}
+		
+		if(getPlayers().size() == 0)
+		{
+			gameOver  = true;
+		}
+	}
 	
 	//GETTERS AND SETTERS
 
@@ -224,6 +286,11 @@ public class World
 	public Player getPlayer()
 	{
 		return playerManager.getPlayer();
+	}
+	
+	public List<Player> getPlayers()
+	{
+		return playerManager.getPlayers();
 	}
 	
 	public List<Ghost> getGhosts()

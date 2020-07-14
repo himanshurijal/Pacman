@@ -15,6 +15,7 @@ import dev.hrijal.pacman.entities.Subject;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.FrightenedState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
 import dev.hrijal.pacman.tiles.Tile;
 
 public class ScoreManager implements GhostCollisionObserver, StaticCollisionObserver
@@ -117,7 +118,7 @@ public class ScoreManager implements GhostCollisionObserver, StaticCollisionObse
 			
 			for(Ghost ghost: entityCollisionManager.getGhostCollisionObjects())
 			{
-				if(ghost.getState() instanceof FrightenedState || ghost.getState() instanceof DeadState)
+				if(ghost.getStateAfterPause() instanceof DeadState)
 				{
 					if(capsuleCount != entityCollisionManager.getCapsuleCount())
 					{

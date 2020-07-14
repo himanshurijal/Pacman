@@ -21,37 +21,47 @@ public class ChasingState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{
-		if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
+		if(ghostDead)
 		{
-			if(currStateTimer.isTimerReady())
+			ghost.setStateAfterPause(ghost.getState());
+			ghost.setState(ghost.getPauseState());
+		}
+		else if(playerDead)
+		{
+			ghost.setStateAfterPause(ghost.getResetState());
+			ghost.setState(ghost.getPauseState());
+		}
+		else
+		{
+			if(switchedStateCount <= 4) //Switch to scattered state after chasing duration limit has been reached
 			{
-				currStateTimer.incrementTimer();
-				
-				if(currStateTimer.isTimerExpired())
+				if(currStateTimer.isTimerReady())
 				{
-					switchedStateCount++;
-					currStateTimer.resetTimer();
-					ghost.setState(ghost.getScatteredState());
+					currStateTimer.incrementTimer();
+					
+					if(currStateTimer.isTimerExpired())
+					{
+						switchedStateCount++;
+						currStateTimer.resetTimer();
+						ghost.setState(ghost.getScatteredState());
+					}
+				}
+				else
+				{
+					currStateTimer.readyTimer();
 				}
 			}
 			else
 			{
-				currStateTimer.readyTimer();
+				//Once state has been switched to scattered state for four times remain in chasing state indefinitely
 			}
-		}
-		else
-		{
-			//Once state has been switched to scattered state for four times remain in chasing state indefinitely
 		}
 	}
 	
 	@Override
 	public void makeNextMove()
 	{
-		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
-		{
-			ghost.chase();
-		}
+		ghost.chase();
 	}
 	
 	@Override

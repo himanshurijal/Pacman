@@ -19,29 +19,39 @@ public class AtHomeState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{	
-		if(!currStateTimer.isTimerReady())
+		if(ghostDead)
 		{
-			currStateTimer.readyTimer();
+			ghost.setStateAfterPause(ghost.getState());
+			ghost.setState(ghost.getPauseState());
+		}
+		else if(playerDead)
+		{
+			ghost.setStateAfterPause(ghost.getResetState());
+			ghost.setState(ghost.getPauseState());
 		}
 		else
 		{
-			currStateTimer.incrementTimer();
-			
-			if(currStateTimer.isTimerExpired())
+			if(!currStateTimer.isTimerReady())
 			{
-				currStateTimer.resetTimer();
-				ghost.setState(ghost.getScatteredState());
+				currStateTimer.readyTimer();
+			}
+			else
+			{
+				currStateTimer.incrementTimer();
+				
+				if(currStateTimer.isTimerExpired())
+				{
+					currStateTimer.resetTimer();
+					ghost.setState(ghost.getScatteredState());
+				}
 			}
 		}
 	}
 
 	@Override
 	public void makeNextMove()
-	{
-		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
-		{
-			ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
-		}
+	{	
+		ghost.makeNextMove(Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, ghost.getSpeed());
 	}
 	
 	@Override

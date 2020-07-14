@@ -128,6 +128,7 @@ public class PlayerManager implements GhostCollisionObserver
 				else
 				{
 					currPlayer.setDead(true);
+					movementPauseTimer.readyTimer();
 					playerDeadTimer.readyTimer();
 				}
 			}
@@ -140,5 +141,11 @@ public class PlayerManager implements GhostCollisionObserver
 	public Player getPlayer()
 	{
 		return currPlayer;
+	}
+	
+	public List<Player> getPlayers()
+	{
+		List<Player> playersCopy = new ArrayList<>(players);
+		return playersCopy;
 	}
 }

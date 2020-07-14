@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadRunHome;
-import dev.hrijal.pacman.gfx.Assets;
 
 public class DeadState extends GhostState
 {
@@ -20,41 +19,29 @@ public class DeadState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{		
+		if(playerDead)
+		{
+			ghost.setStateAfterPause(ghost.getResetState());
+			ghost.setState(ghost.getPauseState());
+		}
+		
 		if(ghost.getX() == DeadRunHome.DEST_X && ghost.getY() == DeadRunHome.DEST_Y)
 		{			
-			ghost.getLastState().setTimer(ghost.getLastStateTimer());
-			ghost.getLastState().setLastTime(System.currentTimeMillis());
-			ghost.setState(ghost.getLastState());
+			ghost.getStateAfterFrightened().setLastTime(System.currentTimeMillis());
+			ghost.setState(ghost.getStateAfterFrightened());
 		}
 	}
 	
 	@Override
 	public void makeNextMove()
 	{
-		if(movementPauseTimer.isTimerReady())
-		{
-			movementPauseTimer.incrementTimer();
-			
-			if(movementPauseTimer.isTimerExpired())
-			{
-				movementPauseTimer.resetTimer();
-			}
-		}
-		
-		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
-		{
-			ghost.runToHome();
-		}
+		ghost.runToHome();
 	}
 	
 	@Override
 	public BufferedImage getCurrentFrame() 
 	{
-		if(movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't started yet
-		{
-			return Assets.empty;
-		}
-		else if(ghost.getxMove() > 0)
+		if(ghost.getxMove() > 0)
 		{
 			return movement[0];
 		}
@@ -82,4 +69,9 @@ public class DeadState extends GhostState
 		//Do nothing
 	}
 	
+	@Override
+	public void ghostCollisionWithPlayer()
+	{
+		//Do nothing
+	}
 }

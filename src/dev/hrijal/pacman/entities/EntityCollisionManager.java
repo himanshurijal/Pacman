@@ -6,13 +6,15 @@ import java.util.List;
 import dev.hrijal.pacman.Handler;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.DeadState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.PauseState;
+import dev.hrijal.pacman.entities.creatures.ghosts.ghoststates.ResetState;
 import dev.hrijal.pacman.entities.creatures.player.Player;
 import dev.hrijal.pacman.entities.statics.Capsule;
 import dev.hrijal.pacman.entities.statics.StaticEntity;
 
 public class EntityCollisionManager implements Subject 
 {
-	
+	//TODO: Need to change use of instanceof for ghost collisions
 	private Handler handler;
 	
 	private List<GhostCollisionObserver> ghostCollisionObservers; 	//Observer classes: ScoreManager, GhostManager
@@ -108,7 +110,9 @@ public class EntityCollisionManager implements Subject
 	{	
 		for(Ghost ghost: handler.getWorld().getGhosts())
 		{
-			if(collisionPlayerAndGhost(ghost) && !(ghost.getState() instanceof DeadState))
+			if(collisionPlayerAndGhost(ghost) && !(ghost.getState() instanceof DeadState)
+											  && !(ghost.getState() instanceof PauseState)
+											  && !(ghost.getState() instanceof ResetState))
 			{
 				ghostCollisionObjects.add(ghost);
 			}

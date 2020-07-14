@@ -29,32 +29,40 @@ import dev.hrijal.pacman.tiles.Tile;
 public class GhostManager implements GhostCollisionObserver, StaticCollisionObserver
 {
 	
-	private List<Ghost> ghosts;
+	private List<Ghost> ghosts; //Remeber to change access
+	public static final float GHOST_RED_SPAWN_X = Tile.TILEWIDTH * 11,
+							  GHOST_RED_SPAWN_Y = Tile.TILEHEIGHT * 9,
+							  GHOST_PURPLE_SPAWN_X = Tile.TILEWIDTH * 12,
+							  GHOST_PURPLE_SPAWN_Y = Tile.TILEHEIGHT * 11,
+							  GHOST_GREEN_SPAWN_X = Tile.TILEWIDTH * 11,
+							  GHOST_GREEN_SPAWN_Y = Tile.TILEHEIGHT * 11,
+							  GHOST_ORANGE_SPAWN_X = Tile.TILEWIDTH * 10,
+							  GHOST_ORANGE_SPAWN_Y = Tile.TILEHEIGHT * 11;
 
 	public GhostManager(Handler handler, EntityCollisionManager entityCollisionManager)
 	{
 		//Create ghosts
 		ghosts = new ArrayList<>();
 		
-		Ghost ghostRed = new Ghost(handler, Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 9, Assets.ghostRed);
+		Ghost ghostRed = new Ghost(handler, GHOST_RED_SPAWN_X, GHOST_RED_SPAWN_Y, Assets.ghostRed);
 		ghostRed.setScatterBehavior(new ScatterBottomLeft(ghostRed));
 		ghostRed.setChaseBehavior(new ChaseAggressive(handler,ghostRed));
 		ghostRed.setFrightenedBehavior(new FrightenedTopLeftMid(ghostRed));
 		ghostRed.setDeadBehavior(new DeadRunHome(ghostRed));
 		
-		Ghost ghostPurple = new Ghost(handler, Tile.TILEWIDTH * 12, Tile.TILEHEIGHT * 11, Assets.ghostPurple);
+		Ghost ghostPurple = new Ghost(handler, GHOST_PURPLE_SPAWN_X, GHOST_PURPLE_SPAWN_Y, Assets.ghostPurple);
 		ghostPurple.setScatterBehavior(new ScatterBottomRight(ghostPurple));
 		ghostPurple.setChaseBehavior(new ChaseAmbush(handler,ghostPurple));
 		ghostPurple.setFrightenedBehavior(new FrightenedTopRightMid(ghostPurple));
 		ghostPurple.setDeadBehavior(new DeadRunHome(ghostPurple));
 		
-		Ghost ghostGreen = new Ghost(handler, Tile.TILEWIDTH * 11, Tile.TILEHEIGHT * 11, Assets.ghostGreen);
+		Ghost ghostGreen = new Ghost(handler, GHOST_GREEN_SPAWN_X, GHOST_GREEN_SPAWN_Y, Assets.ghostGreen);
 		ghostGreen.setScatterBehavior(new ScatterTopRight(ghostGreen));
 		ghostGreen.setChaseBehavior(new ChaseRelative(handler,ghostGreen));
 		ghostGreen.setFrightenedBehavior(new FrightenedBottomRightMid(ghostGreen));
 		ghostGreen.setDeadBehavior(new DeadRunHome(ghostGreen));
 		
-		Ghost ghostOrange = new Ghost(handler, Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 11, Assets.ghostOrange);
+		Ghost ghostOrange = new Ghost(handler, GHOST_ORANGE_SPAWN_X, GHOST_ORANGE_SPAWN_Y, Assets.ghostOrange);
 		ghostOrange.setScatterBehavior(new ScatterTopLeft(ghostOrange));
 		ghostOrange.setChaseBehavior(new ChasePatrol(handler,ghostOrange));
 		ghostOrange.setFrightenedBehavior(new FrightenedBottomLeftMid(ghostOrange));
@@ -62,7 +70,7 @@ public class GhostManager implements GhostCollisionObserver, StaticCollisionObse
 			
 		//Set starting state for each ghost
 		ghostRed.setState(ghostRed.getScatteredState());
-		ghostRed.setAtHomeDuration(1);
+		ghostRed.setAtHomeDuration(0);
 
 		ghostPurple.setState(ghostPurple.getAtHomeState());
 		ghostPurple.setAtHomeDuration(1000);

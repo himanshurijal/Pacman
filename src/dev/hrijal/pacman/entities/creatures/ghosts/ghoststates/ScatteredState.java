@@ -18,29 +18,39 @@ public class ScatteredState extends GhostState
 	@Override
 	public void checkTransitionToNextState()
 	{
-		if(currStateTimer.isTimerReady())
+		if(ghostDead)
 		{
-			currStateTimer.incrementTimer();
-			
-			if(currStateTimer.isTimerExpired())
-			{
-				currStateTimer.resetTimer();
-				ghost.setState(ghost.getChasingState());
-			}
+			ghost.setStateAfterPause(ghost.getState());
+			ghost.setState(ghost.getPauseState());
+		}
+		else if(playerDead)
+		{
+			ghost.setStateAfterPause(ghost.getResetState());
+			ghost.setState(ghost.getPauseState());
 		}
 		else
 		{
-			currStateTimer.readyTimer();
+			if(currStateTimer.isTimerReady())
+			{
+				currStateTimer.incrementTimer();
+				
+				if(currStateTimer.isTimerExpired())
+				{
+					currStateTimer.resetTimer();
+					ghost.setState(ghost.getChasingState());
+				}
+			}
+			else
+			{
+				currStateTimer.readyTimer();
+			}
 		}
 	}
 	
 	@Override
 	public void makeNextMove()
 	{
-		if(!movementPauseTimer.isTimerReady()) //If the timer to pause movement hasn't been started
-		{
-			ghost.scatter();
-		}
+		ghost.scatter();
 	}
 	
 	@Override
