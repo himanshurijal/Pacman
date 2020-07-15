@@ -77,7 +77,7 @@ public class GhostManager implements GhostCollisionObserver, StaticCollisionObse
 		
 		ghostGreen.setState(ghostGreen.getAtHomeState());
 		ghostGreen.setAtHomeDuration(15000);
-		
+	
 		ghostOrange.setState(ghostOrange.getAtHomeState());
 		ghostOrange.setAtHomeDuration(10000);
 		

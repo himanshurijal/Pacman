@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Animation;
+import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
 public class FrightenedState extends GhostState
@@ -30,6 +31,7 @@ public class FrightenedState extends GhostState
 		else if(playerDead)
 		{
 			ghost.setStateAfterPause(ghost.getResetState());
+			ghostsInResetStateCount++;
 			ghost.setState(ghost.getPauseState());
 		}
 		else
@@ -51,13 +53,18 @@ public class FrightenedState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-		ghost.runAway();
+		ghost.runAway(); //No checks for ghostsInResetStateCount in ResetState because they can only be in
+						 //AtHomeState, ChasingState, or ScatteredState after leaving ResetState.
 	}
 	
 	@Override
 	public BufferedImage getCurrentFrame()
 	{
-		if(currStateTimer.getTimer() < currStateTimer.getDuration() - Ghost.FLASHING_DURATION) 
+		if(playerDeathCount == 3)
+		{
+			return Assets.empty;
+		}
+		else if(currStateTimer.getTimer() < currStateTimer.getDuration() - Ghost.FLASHING_DURATION) 
 		{
 			return movement;
 		}

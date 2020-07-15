@@ -80,8 +80,6 @@ public class PlayerManager implements GhostCollisionObserver
 			
 			if(playerDeadTimer.isTimerExpired())
 			{	
-				System.out.println("Player dead");
-				
 				players.remove(currPlayer);
 				
 				if(players.size() > 0)

@@ -9,13 +9,19 @@ public abstract class GhostState
 {
 	
 	protected Ghost ghost;
-
+	
 	//COLLISION FLAGS
 	protected static boolean ghostDead;
 	protected static boolean playerDead;
 	
 	//TIMERS
-	protected Timer currStateTimer; //This timer will determine how long ghosts will stay in their current state
+	protected Timer currStateTimer; //This timer will determine how long ghosts will stay in their current state.
+	
+	protected static int ghostsInResetStateCount = 0; //We need this count to ensure ghosts only makeNextMove
+													  //once all the ghosts exit ResetState.
+	protected static int playerDeathCount = 0; //We need this count to ensure ghosts don't render on screen
+											 //once the game is over. (We do stop rendering ghosts in the world 
+											 //from World.ResetState but the timers aren't working accurately.)
 	
 	public GhostState(Ghost ghost, long duration)
 	{
@@ -35,28 +41,26 @@ public abstract class GhostState
 	
 	public abstract BufferedImage getCurrentFrame();
 	
-	public void playerCollisionWithCapsule() //Overridden in FrightenedState, DeadState, PauseState, ResetState
+	public void playerCollisionWithCapsule() //Overridden in FrightenedState, DeadState, PauseState, ResetState.
 	{
 		ghost.setStateAfterFrightened(ghost.getState());
 		
 		ghost.setState(ghost.getFrightenedState());
 	}
 
-	public void ghostCollisionWithPlayer() //Overridden in FrightenedState, DeadState, PauseState, ResetState
+	public void ghostCollisionWithPlayer() //Overridden in FrightenedState, DeadState, PauseState, ResetState.
 	{
 		playerDead = true;
+		playerDeathCount++;
 		
 		ghost.setStateAfterPause(ghost.getResetState());
+		ghostsInResetStateCount++;
 
 		ghost.setState(ghost.getPauseState());
 	}
 	
 	
 	//GETTERS AND SETTERS
-
-	public static boolean isPlayerDead() {
-		return playerDead;
-	}
 
 	public void setDuration(long duration)
 	{

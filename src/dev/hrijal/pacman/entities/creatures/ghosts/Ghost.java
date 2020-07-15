@@ -39,7 +39,7 @@ public class Ghost extends Creature
 	private GhostState resetState;
 	
 	private GhostState currState;
-	
+
 	private GhostState stateAfterFrightened; //Needed for storing the next state to transition to once ghosts exit FrightenedState
 	private GhostState stateAfterPause;		 //or PauseState.
 	
@@ -93,7 +93,7 @@ public class Ghost extends Creature
 
 	@Override
 	public void tick() 
-	{				
+	{			
 		currState.checkTransitionToNextState();
 		currState.makeNextMove();
 	}
@@ -333,6 +333,6 @@ public class Ghost extends Creature
 	public void setDeadBehavior(DeadBehavior deadBehavior)
 	{
 		this.deadBehavior = deadBehavior;
-	}	
-
+	}
+	
 }

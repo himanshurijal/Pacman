@@ -3,7 +3,7 @@ package dev.hrijal.pacman.entities.creatures.ghosts.states;
 import java.awt.image.BufferedImage;
 
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
-import dev.hrijal.pacman.tiles.Tile;
+import dev.hrijal.pacman.gfx.Assets;
 
 public class ChasingState extends GhostState
 {
@@ -29,6 +29,7 @@ public class ChasingState extends GhostState
 		else if(playerDead)
 		{
 			ghost.setStateAfterPause(ghost.getResetState());
+			ghostsInResetStateCount++;
 			ghost.setState(ghost.getPauseState());
 		}
 		else
@@ -54,13 +55,22 @@ public class ChasingState extends GhostState
 	@Override
 	public void makeNextMove()
 	{
-		ghost.chase();
+		if(ghostsInResetStateCount == 0) //Only move if all ghosts have exited ResetState. Ghosts might be in
+										 //this state after ResetState if switchedStateCount >= 4 before their
+			 							 //state was set to ResetState
+		{
+			ghost.chase();
+		}
 	}
 	
 	@Override
 	public BufferedImage getCurrentFrame() 
 	{
-		if(ghost.getxMove() > 0)
+		if(playerDeathCount == 3)
+		{
+			return Assets.empty;
+		}
+		else if(ghost.getxMove() > 0)
 		{
 			return movement[0];
 		}

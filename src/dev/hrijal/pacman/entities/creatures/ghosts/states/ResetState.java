@@ -19,15 +19,19 @@ public class ResetState extends GhostState
 		currStateTimer.incrementTimer();
 		
 		if(currStateTimer.isTimerExpired())
-		{
-//			System.out.println("Ghost exited!");
+		{			
 			playerDead = false;
-			
+
 			currStateTimer.resetTimer();
 			
 			ghost.setX(ghost.getSpawnX());
 			ghost.setY(ghost.getSpawnY());
+			ghost.setxMove(0);
+			ghost.setyMove(0);
+			
 			ghost.setState(ghost.getAtHomeState());
+			
+			ghostsInResetStateCount--;
 		}
 	}
 

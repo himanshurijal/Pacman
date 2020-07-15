@@ -1,13 +1,10 @@
 package dev.hrijal.pacman.worlds;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 
 import dev.hrijal.pacman.Handler;
-import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.GhostManager;
@@ -20,6 +17,11 @@ import dev.hrijal.pacman.entities.statics.StaticEntity;
 import dev.hrijal.pacman.entities.statics.StaticEntityManager;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.utils.FileParserUtil;
+import dev.hrijal.pacman.worlds.states.ResetState;
+import dev.hrijal.pacman.worlds.states.PlayingState;
+import dev.hrijal.pacman.worlds.states.ReadyState;
+import dev.hrijal.pacman.worlds.states.WorldState;
+
 
 public class World
 {
@@ -44,14 +46,17 @@ public class World
 	//SCOREBOARD
 	private ScoreManager scoreManager;
 	
-	//TIMER
-	public static final long GAME_START_DURATION = 3000;
-	private Timer gameStartTimer;
-
-	//WORLD STATES
-	private boolean playerDead = false;
-	private boolean gameWon = false;
-	private boolean gameOver = false;
+	//STATES
+	private WorldState readyState;
+	private WorldState playingState;
+	private WorldState resetState;
+	
+	private WorldState currState;
+	
+	//TIMER DURATIONS
+	public static final long READY_DURATION = 3000,
+							 PLAY_DURATION = (long) Double.POSITIVE_INFINITY,
+							 RESET_DURATION = 1810;
 	
 	public World(String path, Handler handler)
 	{	
@@ -98,12 +103,12 @@ public class World
 		//ScoreBoard
 		scoreManager = new ScoreManager(entityCollisionManager);
 		
-		//Timer
-		gameStartTimer = new Timer(GAME_START_DURATION);
+		//States
+		readyState = new ReadyState(this, READY_DURATION);
+		playingState = new PlayingState(this, PLAY_DURATION, entityCollisionManager);
+		resetState = new ResetState(this, RESET_DURATION);
 		
-		//Register as observer
-//		entityCollisionManager.registerGhostCollisionObserver(this);
-//		entityCollisionManager.registerStaticCollisionObserver(this);
+		currState = readyState;
 	}
 
 	public void loadWorld(String path)
@@ -129,91 +134,14 @@ public class World
 	}
 	
 	public void tick()
-	{		
-//		System.out.println("World tick!");
-//		
-		if(getPlayers().size() == 0)
-		{
-			gameOver = true;
-		}
-		
-		if(getStaticEntities().size() == 0)
-		{
-			gameWon = true;
-		}
-		
-		if(getPlayer().isDead())
-		{
-			playerDead = true;
-		}
-		
-		if(playerDead && !getPlayer().isDead())
-		{
-			gameStartTimer.resetTimer();
-			playerDead = false;
-		}	
-
-		if(gameStartTimer.isTimerExpired())
-		{
-			if(!gameWon && !gameOver) 
-			{
-				staticEntityManager.tick();
-				
-				playerManager.tick();
-				
-				ghostManager.tick();
-				
-				entityCollisionManager.checkStaticCollisionAndNotify();
-				entityCollisionManager.checkGhostCollisionAndNotify();
-				
-				scoreManager.tick();
-			}
-		}
-		else
-		{
-			gameStartTimer.incrementTimer();
-		}
+	{	
+		currState.tick();
+		currState.checkTransitionToNextState();
 	}
 	
 	public void render(Graphics g)
 	{
-		for (int x = 0; x < height; x++)
-		{
-			for (int y = 0; y < width; y++)
-			{
-				getTile(x,y).render(g, y * Tile.TILEWIDTH, x * Tile.TILEHEIGHT);
-			}
-		}
-		
-		if(gameWon)
-		{
-			g.setColor(Color.GREEN);
-			g.setFont(new Font("SansSerif", Font.BOLD, 27));
-			g.drawString("You Won!", Tile.TILEWIDTH * 9 + 10, Tile.TILEHEIGHT * 14 - 5);
-		}
-		else if(gameOver)
-		{
-			g.setColor(Color.RED);
-			g.setFont(new Font("SansSerif", Font.BOLD, 27));
-			g.drawString("Game Over!", Tile.TILEWIDTH * 9 - 5, Tile.TILEHEIGHT * 14 - 5);
-		}
-		else
-		{
-			if(!gameStartTimer.isTimerExpired())
-			{
-				g.setColor(Color.YELLOW);
-				g.setFont(new Font("SansSerif", Font.BOLD, 27));
-				g.drawString("Ready!", Tile.TILEWIDTH * 10, Tile.TILEHEIGHT * 14 - 5);
-			}
-			
-			staticEntityManager.render(g);
-			
-			playerManager.render(g);
-			
-			ghostManager.render(g);
-		
-			scoreManager.render(g);
-		}
+		currState.render(g);
 	}
 	
 	public Tile getTile(int x, int y)
@@ -243,29 +171,41 @@ public class World
 		tiles[x][y] = id;
 	}
 	
-
-//	@Override
-//	public void updateOnStaticCollision(Subject subject) 
-//	{
-//		if(getStaticEntities().size() == 0)
-//		{
-//			gameWon = true;
-//		}
-//	}
-//
-//	@Override
-//	public void updateOnGhostCollision(Subject subject) 
-//	{
-//		if(GhostState.isPlayerDead())
-//		{
-//			playerDead = true;
-//		}
-//		
-//		if(getPlayers().size() == 0)
-//		{
-//			gameOver  = true;
-//		}
-//	}
+	public void tickWorldComponents()
+	{
+		staticEntityManager.tick();
+		
+		playerManager.tick();
+		
+		ghostManager.tick();
+		
+		entityCollisionManager.checkStaticCollisionAndNotify();
+		entityCollisionManager.checkGhostCollisionAndNotify();
+		
+		scoreManager.tick();
+	}
+	
+	public void renderWorldEnvironment(Graphics g) 
+	{
+		for (int x = 0; x < height; x++)
+		{
+			for (int y = 0; y < width; y++)
+			{
+				getTile(x,y).render(g, y * Tile.TILEWIDTH, x * Tile.TILEHEIGHT);
+			}
+		}
+	}
+	
+	public void renderWorldObjects(Graphics g)
+	{		
+		staticEntityManager.render(g);
+		
+		playerManager.render(g);
+		
+		ghostManager.render(g);
+	
+		scoreManager.render(g);
+	}
 	
 	
 	//GETTERS AND SETTERS
@@ -308,6 +248,33 @@ public class World
 	public List<StaticEntity> getStaticEntities()
 	{
 		return staticEntityManager.getEntities();
+	}
+	
+	//STATES
+	
+	public WorldState getReadyState() 
+	{
+		return readyState;
+	}
+
+	public WorldState getPlayingState() 
+	{
+		return playingState;
+	}
+
+	public WorldState getResetState() 
+	{
+		return resetState;
+	}
+
+	public WorldState getCurrentState() 
+	{
+		return currState;
+	}
+
+	public void setCurrentState(WorldState currState) 
+	{
+		this.currState = currState;
 	}
 	
 }
