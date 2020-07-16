@@ -5,14 +5,14 @@ import java.awt.Graphics;
 import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.worlds.World;
 
-public abstract class WorldState
+public abstract class State
 {
 	
 	protected World world;
 	
 	protected Timer currStateTimer;
 	
-	public WorldState(World world, long duration)
+	public State(World world, long duration)
 	{
 		this.world = world;
 		

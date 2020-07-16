@@ -20,7 +20,7 @@ import dev.hrijal.pacman.utils.FileParserUtil;
 import dev.hrijal.pacman.worlds.states.ResetState;
 import dev.hrijal.pacman.worlds.states.PlayingState;
 import dev.hrijal.pacman.worlds.states.ReadyState;
-import dev.hrijal.pacman.worlds.states.WorldState;
+import dev.hrijal.pacman.worlds.states.State;
 
 
 public class World
@@ -47,11 +47,11 @@ public class World
 	private ScoreManager scoreManager;
 	
 	//STATES
-	private WorldState readyState;
-	private WorldState playingState;
-	private WorldState resetState;
+	private State readyState;
+	private State playingState;
+	private State resetState;
 	
-	private WorldState currState;
+	private State currState;
 	
 	//TIMER DURATIONS
 	public static final long READY_DURATION = 3000,
@@ -252,27 +252,27 @@ public class World
 	
 	//STATES
 	
-	public WorldState getReadyState() 
+	public State getReadyState() 
 	{
 		return readyState;
 	}
 
-	public WorldState getPlayingState() 
+	public State getPlayingState() 
 	{
 		return playingState;
 	}
 
-	public WorldState getResetState() 
+	public State getResetState() 
 	{
 		return resetState;
 	}
 
-	public WorldState getCurrentState() 
+	public State getCurrentState() 
 	{
 		return currState;
 	}
 
-	public void setCurrentState(WorldState currState) 
+	public void setCurrentState(State currState) 
 	{
 		this.currState = currState;
 	}

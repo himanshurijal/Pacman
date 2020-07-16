@@ -3,7 +3,7 @@ package dev.hrijal.pacman.worlds.states;
 import java.awt.Graphics;
 import dev.hrijal.pacman.worlds.World;
 
-public class ResetState extends WorldState
+public class ResetState extends State
 {
 
 	public ResetState(World world, long duration)

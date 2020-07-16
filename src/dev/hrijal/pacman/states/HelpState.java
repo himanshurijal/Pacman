@@ -10,6 +10,7 @@ import dev.hrijal.pacman.Handler;
 
 public class HelpState extends State
 {
+	
 	private Rectangle moveUp;
 	private Rectangle moveDown;
 	private Rectangle moveLeft;

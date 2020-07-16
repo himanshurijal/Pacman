@@ -78,7 +78,7 @@ public class MainMenuState extends State
 			g.setColor(Color.gray);
 		}
 
-		g.drawString("Settings", helpButton.x + 40, helpButton.y + 35);
+		g.drawString("Help", helpButton.x + 70, helpButton.y + 35);
 		g2d.draw(helpButton);
 		
 		//Quit Button

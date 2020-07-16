@@ -7,7 +7,7 @@ import dev.hrijal.pacman.gfx.Animation;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class FrightenedState extends GhostState
+public class FrightenedState extends State
 {
 	
 	private BufferedImage movement;

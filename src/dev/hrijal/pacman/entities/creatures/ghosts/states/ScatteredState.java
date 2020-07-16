@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Assets;
 
-public class ScatteredState extends GhostState
+public class ScatteredState extends State
 {
 
 	private BufferedImage[] movement;

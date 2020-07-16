@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.worlds.World;
 
-public class ReadyState extends WorldState
+public class ReadyState extends State
 {
 
 	public ReadyState(World world, long duration)

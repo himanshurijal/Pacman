@@ -6,7 +6,7 @@ import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.entities.creatures.ghosts.movement.DeadRunHome;
 import dev.hrijal.pacman.gfx.Assets;
 
-public class DeadState extends GhostState
+public class DeadState extends State
 {
 
 	private BufferedImage[] movement;

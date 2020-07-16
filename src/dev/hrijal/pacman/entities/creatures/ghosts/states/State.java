@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import dev.hrijal.pacman.Timer;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 
-public abstract class GhostState 
+public abstract class State 
 {
 	
 	protected Ghost ghost;
@@ -23,7 +23,7 @@ public abstract class GhostState
 											 //once the game is over. (We do stop rendering ghosts in the world 
 											 //from World.ResetState but the timers aren't working accurately.)
 	
-	public GhostState(Ghost ghost, long duration)
+	public State(Ghost ghost, long duration)
 	{
 		this.ghost = ghost;
 

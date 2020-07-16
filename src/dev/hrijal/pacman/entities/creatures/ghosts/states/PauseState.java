@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Assets;
 
-public class PauseState extends GhostState
+public class PauseState extends State
 {
 	
 	public PauseState(Ghost ghost, long duration)
@@ -38,7 +38,7 @@ public class PauseState extends GhostState
 	@Override
 	public BufferedImage getCurrentFrame()
 	{
-		GhostState stateAfterPause = ghost.getStateAfterPause();
+		State stateAfterPause = ghost.getStateAfterPause();
 		
 		if(stateAfterPause instanceof DeadState)
 		{

@@ -7,7 +7,7 @@ import dev.hrijal.pacman.entities.EntityCollisionManager;
 import dev.hrijal.pacman.tiles.Tile;
 import dev.hrijal.pacman.worlds.World;
 
-public class PlayingState extends WorldState
+public class PlayingState extends State
 {
 	
 	private boolean gameWon;
@@ -39,7 +39,7 @@ public class PlayingState extends WorldState
 			gameOver = true;
 		}
 		
-		if(!gameOver)
+		if(!gameOver && !gameWon)
 		{
 			world.tickWorldComponents();
 		}

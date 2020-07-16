@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Assets;
 
-public class ResetState extends GhostState
+public class ResetState extends State
 {
 	
 	public ResetState(Ghost ghost, long duration)

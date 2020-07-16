@@ -7,6 +7,7 @@ import dev.hrijal.pacman.worlds.World;
 
 public class GameState extends State
 {
+	
 	private World world;
 
 	public GameState(Handler handler)
@@ -26,4 +27,5 @@ public class GameState extends State
 	{
 		handler.getWorld().render(g);
 	}
+	
 }

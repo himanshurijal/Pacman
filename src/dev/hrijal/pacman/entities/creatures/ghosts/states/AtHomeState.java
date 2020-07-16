@@ -6,7 +6,7 @@ import dev.hrijal.pacman.entities.creatures.ghosts.Ghost;
 import dev.hrijal.pacman.gfx.Assets;
 import dev.hrijal.pacman.tiles.Tile;
 
-public class AtHomeState extends GhostState
+public class AtHomeState extends State
 {
 	
 	private BufferedImage[] movement;

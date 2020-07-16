@@ -19,7 +19,7 @@ import dev.hrijal.pacman.entities.creatures.ghosts.states.AtHomeState;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.ChasingState;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.DeadState;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.FrightenedState;
-import dev.hrijal.pacman.entities.creatures.ghosts.states.GhostState;
+import dev.hrijal.pacman.entities.creatures.ghosts.states.State;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.PauseState;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.ResetState;
 import dev.hrijal.pacman.entities.creatures.ghosts.states.ScatteredState;
@@ -30,18 +30,18 @@ public class Ghost extends Creature
 {
 	
 	//STATES
-	private GhostState atHomeState;
-	private GhostState scatteredState;
-	private GhostState chasingState;
-	private GhostState frightenedState;
-	private GhostState deadState;
-	private GhostState pauseState;
-	private GhostState resetState;
+	private State atHomeState;
+	private State scatteredState;
+	private State chasingState;
+	private State frightenedState;
+	private State deadState;
+	private State pauseState;
+	private State resetState;
 	
-	private GhostState currState;
+	private State currState;
 
-	private GhostState stateAfterFrightened; //Needed for storing the next state to transition to once ghosts exit FrightenedState
-	private GhostState stateAfterPause;		 //or PauseState.
+	private State stateAfterFrightened; //Needed for storing the next state to transition to once ghosts exit FrightenedState
+	private State stateAfterPause;		 //or PauseState.
 	
 	public static final long  SCATTERED_DURATION = 7000,
 	   		  				  CHASING_DURATION = 20000,
@@ -248,67 +248,67 @@ public class Ghost extends Creature
 		atHomeState.setDuration(duration);
 	}
 
-	public GhostState getAtHomeState() 
+	public State getAtHomeState() 
 	{
 		return atHomeState;
 	}
 
-	public GhostState getScatteredState() 
+	public State getScatteredState() 
 	{
 		return scatteredState;
 	}
 
-	public GhostState getChasingState()
+	public State getChasingState()
 	{
 		return chasingState;
 	}
 
-	public GhostState getFrightenedState() 
+	public State getFrightenedState() 
 	{
 		return frightenedState;
 	}
 
-	public GhostState getDeadState()
+	public State getDeadState()
 	{
 		return deadState;
 	}
 	
-	public GhostState getPauseState()
+	public State getPauseState()
 	{
 		return pauseState;
 	}
 	
-	public GhostState getResetState()
+	public State getResetState()
 	{
 		return resetState;
 	}
 
-	public GhostState getState()
+	public State getState()
 	{
 		return currState;
 	}
 	 
-	public void setState(GhostState state)
+	public void setState(State state)
 	{
 		currState = state;
 	}
 	
-	public GhostState getStateAfterFrightened()
+	public State getStateAfterFrightened()
 	{
 		return stateAfterFrightened;
 	}
 	
-	public void setStateAfterFrightened(GhostState state)
+	public void setStateAfterFrightened(State state)
 	{
 		this.stateAfterFrightened = state;
 	}
 	
-	public GhostState getStateAfterPause()
+	public State getStateAfterPause()
 	{
 		return stateAfterPause;
 	}
 	
-	public void setStateAfterPause(GhostState state)
+	public void setStateAfterPause(State state)
 	{
 		this.stateAfterPause = state;
 	}
