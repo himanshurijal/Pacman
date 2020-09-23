@@ -1,7 +1,6 @@
 # Pacman
 
-Pacman is a single player game, where the player has three chances to complete the level and win the game. 
-
+Pacman is a single player game, where the player has three chances to complete the level and win the game.  
 
 
 ## How to run the Java application (game)
