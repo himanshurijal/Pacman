@@ -13,7 +13,7 @@ Pacman is a single player game, where the player has three chances to complete t
 
 ## How to start the game
 
-Once you have the application successfully running, you will be greeted with the gane's main menu. From there, click on the option "Play Game" to start playing.
+Once you have the application successfully running, you will be greeted with the game's main menu. From there, click on the option "Play Game" to start playing.
 
 
 ## How to play
@@ -33,7 +33,8 @@ You can use the following keys to control Pacman and move him within the maze:
 4. D -> Move Right
 
 
-## More about the ghosts
+### More about the ghosts
+
 
 
 
