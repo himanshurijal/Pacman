@@ -33,7 +33,16 @@ You can use the following keys to control Pacman and move him within the maze:
 4. D -> Move Right
 
 
-### More about the ghosts
+## More about the ghosts
+
+There are four ghosts in the game: "Red," "Orange," "Green" and "Purple." Each of them has unique sets of movements that will vary depending on their state and their proximity to Pacman at any point in the game. 
+
+### Red
+
+Red will start at the "Scattered" state in the game, where he will scatter to the maze's bottom left area. He will remain on this state for 7 seconds before transitioning to a "Chase" state, where he will directly chase Pacman for the next 20 seconds. Once the 20 seconds are over, Red will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will indefinitely chase Pacman.
+
+
+
 
 
 
