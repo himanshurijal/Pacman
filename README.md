@@ -53,8 +53,8 @@ Green will start at the "AtHome" state, when he will stay at the "ghost home" fo
 
 Orange will start at the "AtHome" state, when he will stay at the "ghost home" for 10 seconds. Then he will switch to the "Scattered" state, where he will scatter to the maze's top left area. He will remain on this state for 7 seconds before transitioning to a "Chase" state for the next 20 seconds. In the "Chase" state, he will first calculate the distance between him and Pacman. If this distance is more than 8 tile widths he will directly chase Pacman until the distance is reduced to less than 8 tile widths, after which he will scatter back to the maze's top left area. Once the 20 seconds are over, Orange will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will permanently be in the "Chase" state.
 
-![](images/ghostsScattered.png)
-![](images/ghostsChase.png)
+![](images/ghostsScattered.jpg)
+![](images/ghostsChase.jpg)
 
 
 
