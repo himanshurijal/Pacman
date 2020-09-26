@@ -55,15 +55,3 @@ Orange will start at the "AtHome" state, when he will stay at the "ghost home" f
 
 ![](images/ghostsScattered.jpg)
 ![](images/ghostsChase.jpg)
-
-
-
-
-
-
-
-
-
-
-
-![](images/levelDesign.png)
