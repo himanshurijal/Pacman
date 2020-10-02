@@ -35,23 +35,44 @@ You can use the following keys to control Pacman and move him within the maze:
 
 ## More about the ghosts
 
-There are four ghosts in the game: "Red," "Orange," "Green" and "Purple." Each of them has unique sets of movements that will vary depending on their state and their proximity to Pacman at any point in the game. 
+There are four ghosts in the game: "Red," "Orange," "Green," and "Purple." Each of them has unique sets of behaviors that will vary depending on their state and proximity to Pacman at any point in the game.
+
+### Common elements of ghost behavior
+
+Although ghosts can transition between seven states at any point in the game, players should be concerned about four main states. They are "AtHome," "Scattered," "Chasing," and "Frightened." At the beginning of the game, only Red will start in the Scattered state, whereas the remaining three ghosts will start in the AtHome state (where they will move side-to-side inside a small area in the middle of the maze, also called the "ghost home") and then transition to the Scattered state. From the Scattered state, all ghosts will have the following four waves of Scattered/Chasing alternations, unless Pacman consumes a "Capsule":
+
+Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+Stay in the Scattered state for 7 seconds, then transition to the Chasing State permanently.
+
+If Pacman consumes a Capsule, all four ghosts will immediately transition to the Frightened state for the next 8 seconds. If Pacman collides with the ghosts at this state, the ghosts will return to the ghost home. Whether the ghosts return to the ghost home or the 8 seconds run out without collisions with Pacman, ghosts will transition back to the last state they were in before the Frightened state. 
+
+Below, we discuss the difference in ghost behavior in each state. We use "Tile" to refer to a 30\*30 pixel square on the screen. The total maze size is 22\*23 tiles. 
 
 ### Red
 
-Red will start at the "Scattered" state in the game, when he will scatter to the maze's bottom left area. He will remain on this state for 7 seconds before transitioning to a "Chase" state for the next 20 seconds, when he will directly chase Pacman. Once the 20 seconds are over, Red will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will permanently be in the "Chase" state.
+Red will stay in the AtHome state for 0 seconds (as Red does not start the game in this state.) 
+In the Scattered state, Red will move towards the maze's bottom-left area. 
+In the Chasing state, Red will directly chase Pacman by always moving towards the nearest tile to Pacman in the maze. 
 
 ### Purple
 
-Purple will start at the "AtHome" state, when he will stay at the "ghost home" for 1 second. Then he will switch to the "Scattered" state, when he will scatter to the maze's bottom right area. He will remain on this state for 7 seconds before transitioning to a "Chase" state for the next 20 seconds. In the "Chase" state, he will try to ambush Pacman by always moving to the tile which is at a distance of 2 tile widths from Pacman. Once the 20 seconds are over, Purple will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will indefinitely chase Pacman.
+Purple will stay in the AtHome state for 1 second.
+In the Scattered state, Purple will move towards the maze's bottom-right area. 
+In the Chasing state, Purple will ambush Pacman by always moving towards the nearest tile, which is at a distance of two tile widths from Pacman's front. 
 
-### Green 
+### Green
 
-Green will start at the "AtHome" state, when he will stay at the "ghost home" for 15 seconds. Then he will switch to the "Scattered" state, when he will scatter to the maze's bottom left area. He will remain on this state for 7 seconds before transitioning to a "Chase" state for the next 20 seconds. In the "Chase" state, he will always move towards the tile which is at twice the distance between Pacman and Red at any point in the game. Once the 20 seconds are over, Green will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will permanently be in the "Chase" state.
+Green will stay in the AtHome state for 15 seconds. 
+In the Scattered state, Green will move towards the maze's top-right area. 
+In the Chasing state, Green will always move towards the nearest tile, which is at twice the distance between Pacman and Red.
 
 ### Orange
 
-Orange will start at the "AtHome" state, when he will stay at the "ghost home" for 10 seconds. Then he will switch to the "Scattered" state, when he will scatter to the maze's top left area. He will remain on this state for 7 seconds before transitioning to a "Chase" state for the next 20 seconds. In the "Chase" state, he will first calculate the distance between him and Pacman. If this distance is more than 8 tile widths he will directly chase Pacman until the distance is reduced to less than 8 tile widths, after which he will scatter back to the maze's top left area. Once the 20 seconds are over, Orange will transition back to the "Scattered" state and continue the same transition cycle three more times, after which he will permanently be in the "Chase" state.
+Orange will stay in the AtHome state for 10 seconds. 
+In the Scattered state, Orange will move towards the maze's top-left area. 
+In the Chasing state, Orange will first calculate the distance between him and Pacman. If this distance is more than eight tile widths, he will directly chase Pacman until the distance is reduced to less than eight tile widths, after which he will move back towards the maze's top-left area and repeat calculating the distance again. 
 
 ![](images/ghostsScattered.jpg)
 ![](images/ghostsChase.jpg)
