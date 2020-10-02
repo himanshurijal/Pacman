@@ -41,10 +41,10 @@ There are four ghosts in the game: "Red," "Orange," "Green," and "Purple." Each 
 
 Although ghosts can transition between seven states at any point in the game, players should be concerned about four main states. They are "AtHome," "Scattered," "Chasing," and "Frightened." At the beginning of the game, only Red will start in the Scattered state, whereas the remaining three ghosts will start in the AtHome state (where they will move side-to-side inside a small area in the middle of the maze, also called the "ghost home") and then transition to the Scattered state. From the Scattered state, all ghosts will have the following four waves of Scattered/Chasing alternations, unless Pacman consumes a "Capsule":
 
-Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
-Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
-Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
-Stay in the Scattered state for 7 seconds, then transition to the Chasing State permanently.
+1. Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+2. Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+3. Stay in the Scattered state for 7 seconds, then transition to the Chasing State for 20 seconds.
+4. Stay in the Scattered state for 7 seconds, then transition to the Chasing State permanently.
 
 If Pacman consumes a Capsule, all four ghosts will immediately transition to the Frightened state for the next 8 seconds. If Pacman collides with the ghosts at this state, the ghosts will return to the ghost home. Whether the ghosts return to the ghost home or the 8 seconds run out without collisions with Pacman, ghosts will transition back to the last state they were in before the Frightened state. 
 
