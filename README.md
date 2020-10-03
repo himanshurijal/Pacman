@@ -79,4 +79,4 @@ In the Chasing state, Orange will first calculate the distance between him and P
 
 ## Demo
 
-![Alt Text](https://giphy.com/gifs/fdVJK5I3dllLUmFAAs)
+![Alt Text](https://media.giphy.com/media/fdVJK5I3dllLUmFAAs/giphy.gif)
