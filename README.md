@@ -76,3 +76,7 @@ In the Chasing state, Orange will first calculate the distance between him and P
 
 ![](images/ghostsScattered.jpg)
 ![](images/ghostsChase.jpg)
+
+## Demo
+
+![Alt Text](https://giphy.com/gifs/fdVJK5I3dllLUmFAAs)
