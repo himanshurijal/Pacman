@@ -14,7 +14,14 @@ public class GameState extends State
 	{
 		super(handler);
 		
-		world = new World("res/worlds/world.txt", handler);
+		// Works with jar file (and Eclipse)
+//		world = new World("dev/hrijal/pacman/res/worlds/world.txt", handler);
+		
+		// From ClassLoader, all paths are "absolute" already - there's no context
+		// from which they could be relative. Therefore you don't need a leading slash.
+		// Check FileParserUtils class.
+		world = new World("worlds/world.txt", handler);
+
 		handler.setWorld(world);
 	}
 	

@@ -17,7 +17,19 @@ public class Assets //Game environment
 	
 	public static void init()
 	{
-		SpriteSheet creatureSheet = new SpriteSheet(ImageLoader.loadImage("/textures/creatureSheet.png"));
+		// Works with jar file (and eclipse)
+//		SpriteSheet creatureSheet = new SpriteSheet(ImageLoader.loadImage("creatureSheet.png"));
+//		SpriteSheet mazeSheet = new SpriteSheet(ImageLoader.loadImage("mazeSheet.png"));
+//		SpriteSheet gateSheet = new SpriteSheet(ImageLoader.loadImage("gateSheet.png"));
+		
+		// Works only with Eclipse
+		// From Class, the path is relative to the package of the class unless
+		// you include a leading slash, so if you don't want to use the current
+		// package, include a slash like this:
+		// For example, for this to work using "textures/creatureSheet.png" the "textures" directory
+		// must be inside the same package as the ImageLoader.class file. (inside dev.hrijal.pacman.gfx)
+		// Check ImageLoader class. 
+		SpriteSheet creatureSheet = new SpriteSheet(ImageLoader.loadImage("/textures/creatureSheet.png")); 
 		SpriteSheet mazeSheet = new SpriteSheet(ImageLoader.loadImage("/textures/mazeSheet.png"));
 		SpriteSheet gateSheet = new SpriteSheet(ImageLoader.loadImage("/textures/gateSheet.png"));
 		

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public final class FileParserUtil 
 {
@@ -14,7 +16,8 @@ public final class FileParserUtil
 		
 		try 
 		{
-			BufferedReader reader = new BufferedReader(new FileReader(path));
+			InputStream inputStream = ClassLoader.getSystemClassLoader().getSystemResourceAsStream(path);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 			String line = null;
 			while((line = reader.readLine()) != null)
 			{
