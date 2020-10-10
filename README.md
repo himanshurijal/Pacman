@@ -4,11 +4,16 @@ Pacman is a single player game, where the player has three chances to complete t
 
 
 ## How to run the Java application (game)
-1. 
-2.
-3.
-4.
-5.
+
+There are two options to run the game.<br />
+The first option is to directly download the jar file from this repository and double-click it to run the game.  
+The second option is listed below: 
+1. Fork the repository and open the project root folder in the Command Line Interface (CLI)
+2. Once at the the root folder, use the following command to make a new directory called bin: `mkdir bin`
+3. Then, to cd into the src folder use the command: `cd src`
+4. Then, to compile the source code use the command: `javac -d ../bin dev/hrijal/pacman/*.java`
+5. Then, to cd back to the root folder use the command: `cd ..`
+6. Finally, to run the game use the command: `java -classpath bin:res dev.hrijal.pacman.GameLauncher`
 
 
 ## How to start the game
